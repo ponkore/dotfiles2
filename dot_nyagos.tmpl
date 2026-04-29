@@ -1,0 +1,5 @@
+local home = nyagos.env.HOME or nyagos.env.USERPROFILE
+package.path = package.path .. ";" .. home .. "\\.config\\nyagos\\?.lua"
+require("nyagos").init()
+
+-- vim:set ft=lua: --

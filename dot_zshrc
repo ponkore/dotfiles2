@@ -1,0 +1,5 @@
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/masao/.lmstudio/bin"
+# End of LM Studio CLI section
