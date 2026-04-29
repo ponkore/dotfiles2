@@ -1,0 +1,5 @@
+# macOS 専用ファイルは Linux では展開しない
+{{ if ne .chezmoi.os "darwin" }}
+dot_fzf.zsh.tmpl
+dot_fzf.bash.tmpl
+{{ end }}
