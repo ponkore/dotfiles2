@@ -274,6 +274,8 @@ command -v lsd   1>/dev/null 2>&1 && alias ls='lsd --classify --group-directorie
 command -v rg    1>/dev/null 2>&1 && alias rg='rg -p'
 command -v less  1>/dev/null 2>&1 && alias less='less -R'
 command -v bat   1>/dev/null 2>&1 && alias cat='bat'
+command -v batcat 1>/dev/null 2>&1 && alias cat='batcat'
+command -v fdfind 1>/dev/null 2>&1 && alias fd='fdfind'
 command -v vim   1>/dev/null 2>&1 && alias vi='vim'
 
 alias ee='emacsclient --tty '
