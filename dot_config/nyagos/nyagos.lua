@@ -64,9 +64,30 @@ return {
   end
 
   --
-  -- TODO: claude-wrapper: ESC-Web 以下で実行する場合には、環境変数 CLAUDE_CONFIG_DIR を設定する
+  -- claude: ESC-Web 以下で実行する場合には CLAUDE_CONFIG_DIR を設定してから実行する
   --
-  nyagos.alias.claude_w = function()
+  local _claude_path = nyagos.which("claude") or "claude"
+
+  nyagos.alias.claude = function(args)
+    local cwd = nyagos.getwd():gsub("\\", "/"):lower()
+    local esc_web_prefix = "c:/projects/esc-web"
+
+    local is_esc_web = (cwd == esc_web_prefix) or
+                       (cwd:sub(1, #esc_web_prefix + 1) == esc_web_prefix .. "/")
+
+    if is_esc_web then
+      nyagos.env.CLAUDE_CONFIG_DIR = nyagos.env.USERPROFILE .. "\\.claude-config\\ESC-Web"
+    end
+
+    local cmd = '"' .. _claude_path .. '"'
+    for _, v in ipairs(args) do
+      cmd = cmd .. " " .. v
+    end
+    nyagos.exec(cmd)
+
+    if is_esc_web then
+      nyagos.env.CLAUDE_CONFIG_DIR = nil
+    end
   end
 
   --
