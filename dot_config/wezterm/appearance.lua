@@ -10,7 +10,7 @@ function M.apply(config)
     { family = "HackGen Console NF" },
     { family = "SauceCodePro Nerd Font Mono" },
   })
-  local is_mac = wezterm.target_triple:find("apple-darwin") ~= nil
+  local is_mac = string.find(wezterm.target_triple, "darwin") ~= nil
   config.font_size = is_mac and 14.0 or 12.0
   config.adjust_window_size_when_changing_font_size = false
   config.treat_east_asian_ambiguous_width_as_wide = false
