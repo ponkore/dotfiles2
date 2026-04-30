@@ -2,8 +2,8 @@ local wezterm = require 'wezterm'
 local M = {}
 
 function M.apply(config)
---  local is_mac = wezterm.target_triple:find("apple-darwin") ~= nil
-  config.default_prog = true and { "zsh" } or { "nyagos.exe" }
+  local is_mac = wezterm.target_triple:find("darwin") ~= nil
+  config.default_prog = is_mac and { "zsh" } or { "nyagos.exe" }
   config.launch_menu = {
     {
       label = "Nyagos",
