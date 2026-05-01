@@ -1,0 +1,14 @@
+[[plugin.deps]]
+use = "dedukun/bookmarks"
+rev = "9ef1254"
+hash = "fc77f2bd3aad78199fbe11b727b1954f"
+
+[[flavor.deps]]
+use = "malick-tammal/monokai"
+rev = "7e709d4"
+hash = "e941611d88bdb95bab3184c3a5e018f8"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "9511cb0"
+hash = "5ebc8659108fcb68fe853e523115ed3c"

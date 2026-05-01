@@ -4,5 +4,7 @@ linemode = "size_and_mtime"
 
 [opener]
 edit = [
-    { run = 'vim "$@"', block = true, desc = "Editor", for = "unix" }
+    { run = "vim %s", desc = "vim", for = "windows", block = true },
+    { run = "gvim %s", desc = "gvim", for = "windows", orphan = true },
+    { run = "C:\\Progra~1\\Notepad++\\notepad++.exe %s", desc = "notepad++", for = "windows", block = true },
 ]

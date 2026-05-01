@@ -1,0 +1,27 @@
+# If your yazi version is lower than v25.5.28, repleace "mgr" by "manager".
+[[mgr.prepend_keymap]]
+on = [ "g", "p" ]
+run = "cd C:/Projects/"
+desc = "Go to C:/Projects/"
+
+[[mgr.prepend_keymap]]
+# on = [ "m" ]
+on = [ "b", "m" ]
+run = "plugin bookmarks save"
+desc = "Save current position as a bookmark"
+
+[[mgr.prepend_keymap]]
+# on = [ "'" ]
+on = [ "b", "g" ]
+run = "plugin bookmarks jump"
+desc = "Jump to a bookmark"
+
+[[mgr.prepend_keymap]]
+on = [ "b", "d" ]
+run = "plugin bookmarks delete"
+desc = "Delete a bookmark"
+
+[[mgr.prepend_keymap]]
+on = [ "b", "D" ]
+run = "plugin bookmarks delete_all"
+desc = "Delete all bookmarks"
