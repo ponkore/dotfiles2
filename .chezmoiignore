@@ -10,3 +10,9 @@ dot_git-prompt.sh
 dot_hgignore_global.tmpl
 dot_config/htop
 {{ end }}
+
+# nyagos は Windows 専用シェルなので他 OS では展開しない
+{{ if ne .chezmoi.os "windows" }}
+dot_nyagos.tmpl
+dot_config/nyagos/nyagos.lua
+{{ end }}
