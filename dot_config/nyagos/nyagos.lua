@@ -2,6 +2,7 @@ return {
   init = function()
 
   require("fzf")
+  require("zoxide")
 
   --
   -- 環境変数
