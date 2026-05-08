@@ -289,3 +289,12 @@ function ya() {
     rm -f -- "$tmp"
 }
 
+#
+# LM Studio CLI (lms)
+#
+export PATH="$PATH:/Users/masao/.lmstudio/bin"
+
+#
+# zoxide
+#
+eval "$(zoxide init zsh)"
