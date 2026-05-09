@@ -1,8 +1,8 @@
 # If your yazi version is lower than v25.5.28, repleace "mgr" by "manager".
 [[mgr.prepend_keymap]]
 on = [ "g", "p" ]
-run = "cd C:/Projects/"
-desc = "Go to C:/Projects/"
+run = "plugin goto-projects"
+desc = "Go to Projects directory"
 
 [[mgr.prepend_keymap]]
 # on = [ "m" ]

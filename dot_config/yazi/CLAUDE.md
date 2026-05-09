@@ -30,6 +30,7 @@ ya pkg sync                    # インストール済みパッケージを pack
 ## 有効なプラグインとフレーバー
 
 - **プラグイン**: `dedukun/bookmarks` — vi スタイルのディレクトリブックマーク（永続化なし。ブックマークデータは `%APPDATA%\yazi\state\.dds` に保存）
+- **プラグイン**: `goto-projects`（ローカル、`plugins/goto-projects.yazi/`）— `g p` キーで Projects ディレクトリへ移動。Windows では `C:/Projects`、それ以外では `~/Projects`
 - **フレーバー（有効）**: `catppuccin-mocha`（`theme.toml` の `[flavor] dark` で設定）
 - **フレーバー（無効）**: `modus-vivendi`、`monokai`
 
@@ -42,6 +43,14 @@ function Linemode:size_and_mtime()
 ```
 
 ファイル一覧にファイルサイズと更新日時を表示します。`yazi.toml` の `linemode` を変更した場合、この関数は使用されなくなります。
+
+## Lua プラグイン API
+
+yazi v25.5.28 以降、コマンド発行には `ya.emit()` を使用します（旧 `ya.mgr_emit()` は deprecated）：
+
+```lua
+ya.emit("cd", { dir })
+```
 
 ## ブックマークのキーバインド
 
