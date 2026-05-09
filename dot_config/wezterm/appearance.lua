@@ -24,7 +24,7 @@ function M.apply(config)
   config.use_fancy_tab_bar = true
   config.window_frame = {
     font = wezterm.font("HackGen Console NF"),
-    font_size = is_mac and 16.0 or 12.0,
+    font_size = is_mac and 16.0 or 11.0,
   }
   config.colors = {
     tab_bar = {
