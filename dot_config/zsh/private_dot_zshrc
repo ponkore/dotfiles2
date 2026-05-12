@@ -243,7 +243,7 @@ if [ -d $HOME/.rbenv ]; then
     # export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 elif [ -d /opt/homebrew/opt/ruby ]; then
     export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-    for _gem_bin in /opt/homebrew/lib/ruby/gems/*/bin; do
+    for _gem_bin in /opt/homebrew/lib/ruby/gems/*/bin(N); do
         [ -d "$_gem_bin" ] && export PATH="$_gem_bin:$PATH"
     done
     unset _gem_bin
