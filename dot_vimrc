@@ -22,6 +22,9 @@ set clipboard=unnamed
 " F5で vimrc を reload
 nnoremap <F5> :source $MYVIMRC<CR>
 
+" .cshtml を HTML として扱う
+autocmd BufNewFile,BufRead *.cshtml set filetype=html
+
 " vim-plug
 call plug#begin('~/.config/vimfiles/plugged')
 Plug 'lambdalisue/vim-fern'
