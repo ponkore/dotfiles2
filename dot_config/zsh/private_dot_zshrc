@@ -286,6 +286,8 @@ command -v vim   1>/dev/null 2>&1 && alias vi='vim'
 
 alias ee='emacsclient --tty '
 
+function tabtitle() { wezterm cli set-tab-title "$1" }
+
 function ya() {
     tmp="$(mktemp -t "yazi-cwd.XXXXX")"
     yazi --cwd-file="$tmp"
