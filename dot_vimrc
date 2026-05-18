@@ -30,8 +30,14 @@ call plug#begin('~/.config/vimfiles/plugged')
 
 Plug 'lambdalisue/vim-fern'
 " #1
+function! s:open_fern() abort
+  execute 'Fern . -drawer -reveal=%'
+  if argc() > 0
+    wincmd l
+  endif
+endfunction
 function! OnVimEnter()
-  call timer_start(10, {_ -> execute('Fern . -drawer -reveal=%')})
+  call timer_start(10, {_ -> s:open_fern()})
 endfunction
 autocmd VimEnter * call OnVimEnter()
 
@@ -48,3 +54,6 @@ let g:fern#renderer = 'nerdfont'
 Plug 'yuki-yano/fern-preview.vim'
 
 call plug#end()
+
+" 全ウィンドウを保存して終了
+nnoremap ZZ :wqa<CR>
