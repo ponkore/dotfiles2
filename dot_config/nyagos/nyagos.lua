@@ -95,7 +95,10 @@ return {
   -- wezterm tab title 設定
   --
   nyagos.alias.tabtitle = function(args)
-    -- TODO: 引数が１つ以外の場合エラー
+    if #args ~= 1 then
+      print("Usage: tabtitle <title>")
+      return
+    end
     nyagos.exec("wezterm cli set-tab-title " .. args[1])
   end
 

@@ -5,6 +5,11 @@ end
 
 local _zoxide_prefix = "z#"
 
+-- nyagos は .lua ファイルもコマンドとして検索するため、カレントディレクトリに
+-- zoxide.lua があると zoxide コマンドの代わりに実行しようとしてしまう。
+-- 起動時にフルパスを解決することで回避する（claude エイリアスと同じ方式）。
+local _zoxide_cmd = '"' .. (nyagos.which("zoxide") or "zoxide") .. '"'
+
 -- OLDPWD 追跡: hook.chdir は移動後に呼ばれるため、2変数で管理する
 -- _zoxide_curdir: フックが前回受け取った newdir（= 現在地の追跡）
 -- _zoxide_oldpwd: z - で戻るための前のディレクトリ
@@ -26,7 +31,7 @@ local function zoxide_cd(path)
         local abspath = nyagos.getwd()
         _zoxide_oldpwd = _zoxide_curdir
         _zoxide_curdir = abspath
-        nyagos.eval("zoxide add -- " .. q(abspath) .. " 2> nul")
+        nyagos.eval(_zoxide_cmd .. " add -- " .. q(abspath) .. " 2>nul")
     else
         nyagos.write("zoxide: " .. (err or "chdir failed: " .. path) .. "\n")
     end
@@ -41,7 +46,7 @@ local _prev_chdir_hook = nyagos.hook.chdir
 nyagos.hook.chdir = function(newdir)
     _zoxide_oldpwd = _zoxide_curdir    -- 前のディレクトリを保存（z - 用）
     _zoxide_curdir = newdir            -- 現在地の追跡を更新
-    nyagos.eval("zoxide add -- " .. q(newdir) .. " 2> nul")
+    nyagos.eval(_zoxide_cmd .. " add -- " .. q(newdir) .. " 2>nul")
     if _prev_chdir_hook then _prev_chdir_hook(newdir) end
 end
 
@@ -88,7 +93,7 @@ nyagos.alias.z = function(args)
     local cwd = nyagos.getwd()
     local keywords = table.concat(args, " ", 1, argc)
     local result = nyagos.eval(
-        "zoxide query --exclude " .. q(cwd) .. " -- " .. keywords .. " 2> nul"
+        _zoxide_cmd .. " query --exclude " .. q(cwd) .. " -- " .. keywords
     )
     if result and result:match("%S") then
         zoxide_cd(result)
@@ -103,14 +108,20 @@ end
 
 nyagos.alias.zi = function(args)
     local keywords = table.concat(args, " ", 1, #args)
-    local cmd = "zoxide query --list"
+    local tmp = os.tmpname()
+    local qcmd = _zoxide_cmd .. " query --list"
     if keywords ~= "" then
-        cmd = cmd .. " -- " .. keywords
+        qcmd = qcmd .. " -- " .. keywords
     end
-    cmd = cmd .. " 2> nul | fzf"
-
-    local result = nyagos.eval(cmd)
-    if result and result:match("%S") then
-        zoxide_cd(result)
+    local cmd = qcmd .. " 2>nul | fzf > " .. q(tmp)
+    nyagos.exec(cmd)
+    local f = io.open(tmp, "r")
+    if f then
+        local result = f:read("*l")
+        f:close()
+        if result and result:match("%S") then
+            zoxide_cd(result)
+        end
     end
+    os.remove(tmp)
 end
