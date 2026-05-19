@@ -47,6 +47,10 @@ let g:fern#default_hidden = 1
 Plug 'lambdalisue/fern-renderer-nerdfont.vim'
 Plug 'lambdalisue/nerdfont.vim'
 
+augroup FernCustom
+  autocmd FileType fern nmap <buffer> H <Plug>(fern-action-leave)
+augroup End
+
 " #3
 let g:fern#renderer = 'nerdfont'
 
