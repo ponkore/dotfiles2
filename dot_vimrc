@@ -1,5 +1,6 @@
 syntax enable
-set number
+set nonumber
+nnoremap <leader>n :set number!<CR>
 set directory=~/.config/vimfiles/swap//
 set viminfo+=n~/.config/vimfiles/viminfo
 let g:netrw_home = '~/.config/vimfiles'
@@ -49,6 +50,7 @@ Plug 'lambdalisue/nerdfont.vim'
 
 augroup FernCustom
   autocmd FileType fern nmap <buffer> H <Plug>(fern-action-leave)
+  autocmd FileType fern setlocal nonumber
 augroup End
 
 " #3
