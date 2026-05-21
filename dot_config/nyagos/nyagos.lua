@@ -69,6 +69,17 @@ return {
   --
   local _claude_path = nyagos.which("claude") or "claude"
 
+  --
+  -- rclaude: ESC-Web であっても環境変数を設定せず claude を起動
+  --
+  nyagos.alias.rclaude = function(args)
+    local cmd = '"' .. _claude_path .. '"'
+    for _, v in ipairs(args) do
+      cmd = cmd .. " " .. v
+    end
+    nyagos.exec(cmd)
+  end
+
   nyagos.alias.claude = function(args)
     local cwd = nyagos.getwd():gsub("\\", "/"):lower()
     local esc_web_prefix = "c:/projects/esc-web"
@@ -76,6 +87,7 @@ return {
     local is_esc_web = (cwd == esc_web_prefix) or
                        (cwd:sub(1, #esc_web_prefix + 1) == esc_web_prefix .. "/")
 
+    -- is_esc_web = false
     if is_esc_web then
       nyagos.env.CLAUDE_CONFIG_DIR = nyagos.env.USERPROFILE .. "\\.claude-config\\ESC-Web"
     end
