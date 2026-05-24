@@ -1,15 +1,30 @@
 {{- if eq .chezmoi.os "darwin" -}}
+{{- $fzfBase := "/opt/homebrew/opt/fzf" -}}
+{{- if eq .chezmoi.arch "amd64" -}}
+{{- $fzfBase = "/usr/local/opt/fzf" -}}
+{{- end -}}
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"
+if [[ ! "$PATH" == *{{ $fzfBase }}/bin* ]]; then
+  PATH="${PATH:+${PATH}:}{{ $fzfBase }}/bin"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "/opt/homebrew/opt/fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source "{{ $fzfBase }}/shell/completion.bash" 2> /dev/null
 
 # Key bindings
 # ------------
-source "/opt/homebrew/opt/fzf/shell/key-bindings.bash"
+source "{{ $fzfBase }}/shell/key-bindings.bash"
+{{- else if eq .chezmoi.os "linux" -}}
+# Setup fzf
+# ---------
+
+# Auto-completion
+# ---------------
+[[ $- == *i* ]] && source "/usr/share/doc/fzf/examples/completion.bash" 2> /dev/null
+
+# Key bindings
+# ------------
+source "/usr/share/doc/fzf/examples/key-bindings.bash"
 {{- end }}

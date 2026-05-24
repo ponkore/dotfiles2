@@ -1,5 +1,5 @@
-# macOS 専用ファイルは Linux/Windows では展開しない
-{{ if ne .chezmoi.os "darwin" }}
+# fzf は Windows では展開しない（macOS / Linux は対応済み）
+{{ if eq .chezmoi.os "windows" }}
 dot_fzf.zsh.tmpl
 dot_fzf.bash.tmpl
 {{ end }}
