@@ -32,8 +32,8 @@ call plug#begin('~/.config/vimfiles/plugged')
 Plug 'lambdalisue/vim-fern'
 " #1
 function! s:open_fern() abort
-  execute 'Fern . -drawer -reveal=%'
   if argc() > 0
+    execute 'Fern . -drawer -reveal=%'
     wincmd l
   endif
 endfunction
