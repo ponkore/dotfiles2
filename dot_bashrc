@@ -137,7 +137,8 @@ if [ ! -z "$PS1" ]; then
             READLINE_LINE="$l"
             READLINE_POINT=${#l}
         }
-        bind -x '"\C-r": peco-select-history'
+        # 対話シェルでない場合、bind は警告（"line editing not enabled"）になるのでスキップ
+        [[ $- == *i* ]] && bind -x '"\C-r": peco-select-history'
     fi
 fi
 
@@ -205,7 +206,7 @@ alias dphpunit='docker exec -w /home/fwdss/fwdsalessupport -it v1_develop_fwdss_
 [ -d ~/Library/Android/sdk/ndk/21.3.6528147 ] && PATH=~/Library/Android/sdk/ndk/21.3.6528147:$PATH
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-. "$HOME/.cargo/env"
+# .cargo/env は L85 で存在チェック付きで読み込み済み（未インストール時のエラーを防ぐため重複行を削除）
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/masao/.lmstudio/bin"
