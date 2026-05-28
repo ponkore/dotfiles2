@@ -30,20 +30,11 @@ autocmd BufNewFile,BufRead *.cshtml set filetype=html
 call plug#begin('~/.config/vimfiles/plugged')
 
 Plug 'lambdalisue/vim-fern'
-" #1
-function! s:open_fern() abort
-  if argc() > 0
-    execute 'Fern . -drawer -reveal=%'
-    wincmd l
-  endif
-endfunction
-function! OnVimEnter()
-  call timer_start(10, {_ -> s:open_fern()})
-endfunction
-autocmd VimEnter * call OnVimEnter()
 
 " #2
 let g:fern#default_hidden = 1
+
+nnoremap <silent> <C-n> :Fern . -drawer -toggle -reveal=%<CR>
 
 Plug 'lambdalisue/fern-renderer-nerdfont.vim'
 Plug 'lambdalisue/nerdfont.vim'
@@ -58,6 +49,10 @@ let g:fern#renderer = 'nerdfont'
 
 " preview for fern
 Plug 'yuki-yano/fern-preview.vim'
+
+" LSP server
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
 
 call plug#end()
 
