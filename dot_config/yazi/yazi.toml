@@ -9,8 +9,13 @@ edit = [
     { run = "C:\\Progra~1\\Notepad++\\notepad++.exe %s", desc = "notepad++", for = "windows", block = true },
     { run = "vim '%s'", desc = "vim", for = "unix", block = true },
 ]
+excel = [
+    { run = 'start "" "%s"', desc = "Excel", for = "windows", orphan = true },
+]
 
 [open]
-rules = [
-    { mime = "*", use = "edit" },
+prepend_rules = [
+    { url = "*.xls",  use = "excel" },
+    { url = "*.xlsx", use = "excel" },
+    { url = "*.xlsm", use = "excel" },
 ]
