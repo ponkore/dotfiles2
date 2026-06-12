@@ -3,7 +3,7 @@
 # 表示項目: プラン識別子 | カレントディレクトリ | git ブランチ | モデル名 | コンテキスト使用量 (使用率)
 #
 # PLAN: "Claude Pro" または "Claude Enterprise" を設定してください
-PLAN="Claude Pro"
+PLAN="Claude Enterprise"
 
 set -u
 
