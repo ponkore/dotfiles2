@@ -30,3 +30,6 @@ require("bookmarks"):setup({
 		},
 	},
 })
+
+-- gitプラグインを有効化
+require("git"):setup()

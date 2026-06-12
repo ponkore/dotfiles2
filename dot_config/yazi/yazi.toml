@@ -13,6 +13,18 @@ excel = [
     { run = 'start "" "%s"', desc = "Excel", for = "windows", orphan = true },
 ]
 
+[[plugin.prepend_fetchers]]
+id    = "git"
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+id    = "git"
+url   = "*/"
+run   = "git"
+group = "git"
+
 [open]
 prepend_rules = [
     { url = "*.xls",  use = "excel" },
