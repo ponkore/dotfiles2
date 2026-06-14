@@ -1,4 +1,12 @@
-dot_bashrc text eol=lf
-dot_claude/statusline-command.sh text eol=lf
-dot_config/yazi/init.lua text eol=lf
-dot_config/yazi/yazi.toml text eol=lf
+# chezmoi 管理リポジトリの行末コード方針
+# 設定ファイル類は端末の core.autocrlf 設定に依存せず常に LF で checkout する
+* text=auto eol=lf
+
+# 取り込んだ第三者ファイル(yazi flavors/plugins)は upstream のまま据え置く
+dot_config/yazi/flavors/** -text
+dot_config/yazi/plugins/** -text
+
+# 明示的バイナリ(誤変換防止)
+*.png binary
+*.pack binary
+*.idx binary
