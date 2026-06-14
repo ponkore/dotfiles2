@@ -1,1 +1,4 @@
 dot_bashrc text eol=lf
+dot_claude/statusline-command.sh text eol=lf
+dot_config/yazi/init.lua text eol=lf
+dot_config/yazi/yazi.toml text eol=lf
