@@ -21,6 +21,18 @@ local function q(path)
     return '"' .. path:gsub("\\+$", "") .. '"'
 end
 
+-- 末尾のスラッシュ/バックスラッシュを除去する。
+-- nyagos.stat() は "C:\foo\" のような末尾セパレータ付きパスを stat できず
+-- nil を返すため、ディレクトリ判定の前に正規化する。
+local function strip_trailing_sep(path)
+    local stripped = path:gsub("[/\\]+$", "")
+    -- 空や "C:"（ドライブルート）になる場合は元のパスを返す
+    if stripped == "" or stripped:match("^%a:$") then
+        return path
+    end
+    return stripped
+end
+
 local function zoxide_cd(path)
     path = path:match("^(.-)%s*$")
     if path == "" then return end
@@ -83,9 +95,10 @@ nyagos.alias.z = function(args)
     end
 
     if argc == 1 then
-        local stat = nyagos.stat(args[1])
+        local dir = strip_trailing_sep(args[1])
+        local stat = nyagos.stat(dir)
         if stat and stat.isdir then
-            zoxide_cd(args[1])
+            zoxide_cd(dir)
             return
         end
     end
