@@ -1,5 +1,5 @@
 {
-{{ if ne .chezmoi.hostname "no-sinkerkyobashi01noMac-mini" }}  "hooks": {
+{{ if and (ne .chezmoi.hostname "no-sinkerkyobashi01noMac-mini") (ne .chezmoi.hostname "swing.local") }}  "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
