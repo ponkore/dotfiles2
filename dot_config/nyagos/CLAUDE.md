@@ -45,6 +45,7 @@ require("nyagos").init()
 | `s` | `git status` | |
 | `di` | `git diff` | |
 | `zoom` | `wezterm cli zoom-pane --toggle` | WezTerm ペインのズーム切り替え |
+| `lg` | `lazygit` | lazygit 起動 |
 
 ### 関数型エイリアス
 

@@ -286,6 +286,7 @@ command -v bat   1>/dev/null 2>&1 && alias cat='bat'
 command -v batcat 1>/dev/null 2>&1 && alias cat='batcat'
 command -v fdfind 1>/dev/null 2>&1 && alias fd='fdfind'
 command -v vim   1>/dev/null 2>&1 && alias vi='vim'
+command -v lazygit 1>/dev/null 2>&1 && alias lg='lazygit'
 
 alias ee='emacsclient --tty '
 

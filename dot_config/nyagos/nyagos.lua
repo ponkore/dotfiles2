@@ -24,6 +24,7 @@ return {
   nyagos.alias.s="git status"
   nyagos.alias.di="git diff"
   nyagos.alias.zoom="wezterm cli zoom-pane --toggle"
+  nyagos.alias.lg="lazygit"
 
   --
   -- prompt (starship)
