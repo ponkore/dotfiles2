@@ -10,13 +10,20 @@ return {
   nyagos.env.YAZI_FILE_ONE=nyagos.env.USERPROFILE .. "\\scoop\\apps\\git\\current\\usr\\bin\\file.exe"
   nyagos.env.HOME=nyagos.env.USERPROFILE
 
-  -- OpenJDK (scoop) の bin が存在すれば PATH に追加
+  -- 指定したパスがディレクトリであれば PATH 先頭に追加する
   -- nyagos.stat はバックスラッシュ区切りのパスを受け付けないためスラッシュで判定する
-  local _openjdk_bin = nyagos.env.USERPROFILE .. "\\scoop\\apps\\openjdk\\current\\bin"
-  local _openjdk_stat = nyagos.stat(_openjdk_bin:gsub("\\", "/"))
-  if type(_openjdk_stat) == "table" and _openjdk_stat.isdir then
-    nyagos.env.PATH = _openjdk_bin .. ";" .. nyagos.env.PATH
+  local function prepend_path_if_dir(path)
+    local st = nyagos.stat(path:gsub("\\", "/"))
+    if type(st) == "table" and st.isdir then
+      nyagos.env.PATH = path .. ";" .. nyagos.env.PATH
+    end
   end
+
+  -- OpenJDK (scoop) の bin が存在すれば PATH 先頭に追加
+  prepend_path_if_dir(nyagos.env.USERPROFILE .. "\\scoop\\apps\\openjdk\\current\\bin")
+
+  -- %USERPROFILE%\bin が存在すれば PATH 先頭に追加
+  prepend_path_if_dir(nyagos.env.USERPROFILE .. "\\bin")
 
   -- nyagos.histsize (default: 1000)
   nyagos.histsize = 100000
@@ -33,6 +40,7 @@ return {
   nyagos.alias.di="git diff"
   nyagos.alias.zoom="wezterm cli zoom-pane --toggle"
   nyagos.alias.lg="lazygit"
+  nyagos.alias.sql="sql -name ESC_Web"  -- 実体は ~/bin/sql.cmd
 
   --
   -- prompt (starship)
