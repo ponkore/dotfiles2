@@ -10,6 +10,14 @@ return {
   nyagos.env.YAZI_FILE_ONE=nyagos.env.USERPROFILE .. "\\scoop\\apps\\git\\current\\usr\\bin\\file.exe"
   nyagos.env.HOME=nyagos.env.USERPROFILE
 
+  -- OpenJDK (scoop) の bin が存在すれば PATH に追加
+  -- nyagos.stat はバックスラッシュ区切りのパスを受け付けないためスラッシュで判定する
+  local _openjdk_bin = nyagos.env.USERPROFILE .. "\\scoop\\apps\\openjdk\\current\\bin"
+  local _openjdk_stat = nyagos.stat(_openjdk_bin:gsub("\\", "/"))
+  if type(_openjdk_stat) == "table" and _openjdk_stat.isdir then
+    nyagos.env.PATH = _openjdk_bin .. ";" .. nyagos.env.PATH
+  end
+
   -- nyagos.histsize (default: 1000)
   nyagos.histsize = 100000
 
