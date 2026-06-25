@@ -35,6 +35,6 @@ prepend_rules = [
     { url = "*.xls",  use = "excel" },
     { url = "*.xlsx", use = "excel" },
     { url = "*.xlsm", use = "excel" },
-    { url = "*.md",       use = [ "markdown", "edit" ] },
-    { url = "*.markdown", use = [ "markdown", "edit" ] },
+    { url = "*.md",       use = [ "edit", "markdown" ] },
+    { url = "*.markdown", use = [ "edit", "markdown" ] },
 ]

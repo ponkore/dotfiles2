@@ -5,6 +5,11 @@ run = "plugin goto-projects"
 desc = "Go to Projects directory"
 
 [[mgr.prepend_keymap]]
+on = [ "M" ]
+run = "shell --orphan -- marktext %h"
+desc = "Open with MarkText"
+
+[[mgr.prepend_keymap]]
 # on = [ "m" ]
 on = [ "b", "m" ]
 run = "plugin bookmarks save"
