@@ -16,6 +16,9 @@ markdown = [
     { run = "marktext %s", desc = "marktext", for = "windows", orphan = true },
     { run = "zed %s", desc = "zed", for = "windows", orphan = true },
     { run = "code %s", desc = "vscode", for = "windows", orphan = true },
+    { run = "open -a MarkText %s", desc = "marktext", for = "macos", orphan = true },
+    { run = "zed %s", desc = "zed", for = "macos", orphan = true },
+    { run = "code %s", desc = "vscode", for = "macos", orphan = true },
 ]
 
 [[plugin.prepend_fetchers]]

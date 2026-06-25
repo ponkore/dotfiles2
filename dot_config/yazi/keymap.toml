@@ -6,7 +6,7 @@ desc = "Go to Projects directory"
 
 [[mgr.prepend_keymap]]
 on = [ "M" ]
-run = "shell --orphan -- marktext %h"
+run = "plugin marktext"
 desc = "Open with MarkText"
 
 [[mgr.prepend_keymap]]
