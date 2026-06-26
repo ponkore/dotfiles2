@@ -9,6 +9,7 @@ function M.apply(config)
     { key = 'Enter', mods = 'SHIFT',        action = wezterm.action.SendString('\x1b[13;2u')}, -- claude に SHIFT+Enter を送る
     { key = 'Enter', mods = 'CTRL|SHIFT',   action = wezterm.action.SendString('\x1b[13;2u')}, -- claude に SHIFT+Enter を送る
     { key = 'c',     mods = 'LEADER',       action = act.SpawnTab 'CurrentPaneDomain' },
+    { key = 'n',     mods = 'LEADER',       action = act.SpawnWindow },
     { key = '"',     mods = 'LEADER|SHIFT', action = act.SplitVertical { domain = 'CurrentPaneDomain' }},
     { key = '%',     mods = 'LEADER|SHIFT', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' }},
     { key = 'o',     mods = 'LEADER',       action = act.ActivatePaneDirection 'Next' },
