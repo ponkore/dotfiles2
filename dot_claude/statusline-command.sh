@@ -108,6 +108,31 @@ else
     C_CTX="$C_OK"
 fi
 
+# レート上限リセット時刻 (Claude.ai Pro/Max のみ・初回API応答後に取得可能)
+# rate_limits.five_hour = 5時間ローリング枠 (いわゆる Cost/Usage Limit)
+limit_seg=""
+five_reset=$(printf '%s' "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
+five_pct=$(printf '%s' "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
+if [ -n "$five_reset" ]; then
+    # Unix エポック秒 → ローカル時刻 (GNU date: -d / BSD date: -r の両対応)
+    reset_disp=$(date -d "@$five_reset" '+%m/%d %H:%M' 2>/dev/null || date -r "$five_reset" '+%m/%d %H:%M' 2>/dev/null)
+    if [ -n "$reset_disp" ]; then
+        if [ -n "$five_pct" ]; then
+            pct_int=$(printf '%.0f' "$five_pct" 2>/dev/null || echo 0)
+            if [ "$pct_int" -ge 80 ]; then
+                C_LIM="$C_DANGER"
+            elif [ "$pct_int" -ge 50 ]; then
+                C_LIM="$C_WARN"
+            else
+                C_LIM="$C_OK"
+            fi
+            limit_seg="${C_LIM}limit ${pct_int}% (reset ${reset_disp})${C_RESET}"
+        else
+            limit_seg="${C_OK}limit reset ${reset_disp}${C_RESET}"
+        fi
+    fi
+fi
+
 # 出力
 sep=" ${C_DIM}|${C_RESET} "
 plan_label="${PLAN}"
@@ -122,5 +147,8 @@ if [ -n "$branch" ]; then
 fi
 out="${out}${sep}${C_MODEL}${model_name}${C_RESET}"
 out="${out}${sep}${C_CTX}ctx ${ctx_disp} (${context_pct}%)${C_RESET}"
+if [ -n "$limit_seg" ]; then
+    out="${out}${sep}${limit_seg}"
+fi
 
 printf '%s' "$out"
