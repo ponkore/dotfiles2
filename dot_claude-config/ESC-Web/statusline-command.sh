@@ -108,6 +108,32 @@ else
     C_CTX="$C_OK"
 fi
 
+# コスト・セッション経過時間
+# NOTE: rate_limits は Claude.ai Pro/Max サブスクライバー限定で、Enterprise 等では
+#       statusline の stdin に含まれないため表示できない。常に取得できる cost で代替する。
+limit_seg=""
+cost_usd=$(printf '%s' "$input" | jq -r '.cost.total_cost_usd // empty')
+dur_ms=$(printf '%s' "$input" | jq -r '.cost.total_duration_ms // empty')
+if [ -n "$cost_usd" ]; then
+    cost_disp=$(printf '$%.2f' "$cost_usd" 2>/dev/null || echo "\$$cost_usd")
+    dur_disp=""
+    if [ -n "$dur_ms" ] && [ "$dur_ms" -gt 0 ] 2>/dev/null; then
+        total_sec=$(( dur_ms / 1000 ))
+        h=$(( total_sec / 3600 ))
+        m=$(( (total_sec % 3600) / 60 ))
+        if [ "$h" -gt 0 ]; then
+            dur_disp="${h}h${m}m"
+        else
+            dur_disp="${m}m"
+        fi
+    fi
+    if [ -n "$dur_disp" ]; then
+        limit_seg="${C_DIM}${cost_disp} / ${dur_disp}${C_RESET}"
+    else
+        limit_seg="${C_DIM}${cost_disp}${C_RESET}"
+    fi
+fi
+
 # 出力
 sep=" ${C_DIM}|${C_RESET} "
 plan_label="${PLAN}"
@@ -122,5 +148,8 @@ if [ -n "$branch" ]; then
 fi
 out="${out}${sep}${C_MODEL}${model_name}${C_RESET}"
 out="${out}${sep}${C_CTX}ctx ${ctx_disp} (${context_pct}%)${C_RESET}"
+if [ -n "$limit_seg" ]; then
+    out="${out}${sep}${limit_seg}"
+fi
 
 printf '%s' "$out"
