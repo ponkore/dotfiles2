@@ -33,6 +33,12 @@ url   = "*/"
 run   = "git"
 group = "git"
 
+[[plugin.prepend_fetchers]]
+id    = "eol"
+url   = "*"
+run   = "eol"
+group = "eol"
+
 [open]
 prepend_rules = [
     { url = "*.xls",  use = "excel" },

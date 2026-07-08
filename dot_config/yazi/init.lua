@@ -33,3 +33,8 @@ require("bookmarks"):setup({
 
 -- gitプラグインを有効化
 require("git"):setup()
+
+-- 改行コード（LF / CRLF）をステータスバー右側に表示
+Status:children_add(function()
+	return require("eol"):status()
+end, 500, Status.RIGHT)
