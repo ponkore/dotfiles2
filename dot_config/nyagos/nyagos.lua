@@ -40,7 +40,7 @@ return {
   nyagos.alias.di="git diff"
   nyagos.alias.zoom="wezterm cli zoom-pane --toggle"
   nyagos.alias.lg="lazygit"
-  nyagos.alias.sql="sql -name ESC_Web"  -- 実体は ~/bin/sql.cmd
+  nyagos.alias.sql="sql -name ESC_Web2"  -- 実体は ~/bin/sql.cmd
 
   --
   -- prompt (starship)
