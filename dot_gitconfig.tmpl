@@ -2,11 +2,22 @@
 	excludesfile = %(prefix)/Users/masao/.gitignore_global
 	autocrlf = false
 [difftool "sourcetree"]
+{{- if eq .chezmoi.os "darwin" }}
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+{{- else }}
+	cmd = "'' "
+{{- end }}
 	path = 
 [mergetool "sourcetree"]
+{{- if eq .chezmoi.os "darwin" }}
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+{{- else }}
+	cmd = "'' "
+{{- end }}
 	trustExitCode = true
+{{- if ne .chezmoi.os "darwin" }}
+	keepBackup = false
+{{- end }}
 [user]
 	name = Masao KATO
 	email = masao.kato@no-sinker.co.jp
@@ -50,4 +61,3 @@
 
 [merge]
 	conflictStyle = zdiff3
-
