@@ -10,6 +10,21 @@ run = "plugin marktext"
 desc = "Open with MarkText"
 
 [[mgr.prepend_keymap]]
+on = [ "g", "s" ]
+run = "plugin git-pane status"
+desc = "Show git status in a new WezTerm pane"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "l" ]
+run = "plugin git-pane log"
+desc = "Show git log in a new WezTerm pane"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "L" ]
+run = "plugin git-pane log-oneline"
+desc = "Show git log --oneline in a new WezTerm pane"
+
+[[mgr.prepend_keymap]]
 # on = [ "m" ]
 on = [ "b", "m" ]
 run = "plugin bookmarks save"
