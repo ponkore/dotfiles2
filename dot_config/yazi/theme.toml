@@ -2,3 +2,7 @@
 # dark = "catppuccin-mocha"
 # dark = "modus-vivendi"
 dark = "monokai"
+
+[git]
+clean_sign = "· "
+clean = { fg = "darkgray" }
