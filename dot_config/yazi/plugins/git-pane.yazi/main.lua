@@ -25,7 +25,7 @@ local function build_command(git_command)
 	end
 
 	return string.format(
-		"wezterm cli split-pane --bottom --percent 35 --cwd %s -- pwsh -NoLogo -NoProfile -Command %s",
+		"wezterm cli split-pane --bottom --percent 75 --cwd %s -- pwsh -NoLogo -NoProfile -Command %s",
 		ya.quote(cwd),
 		ya.quote(git_command)
 	)
@@ -35,9 +35,9 @@ return {
 	entry = function(_, job)
 		local action = job.args[1]
 		local git_command = ({
-			status = "git --paginate status",
-			log = "git --paginate log",
-			["log-oneline"] = "git --paginate log --oneline",
+			status = "git -c core.pager='less -+F -R -X' --paginate status",
+			log = "git -c core.pager='less -+F -R -X' --paginate log",
+			["log-oneline"] = "git -c core.pager='less -+F -R -X' --paginate log --oneline",
 		})[action]
 
 		if not git_command then
