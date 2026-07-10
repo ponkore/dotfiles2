@@ -25,6 +25,11 @@ run = "plugin git-pane log-oneline"
 desc = "Show git log --oneline in a new WezTerm pane"
 
 [[mgr.prepend_keymap]]
+on = [ "!", "!" ]
+run = "plugin shell-pane"
+desc = "Open a shell in a new WezTerm pane"
+
+[[mgr.prepend_keymap]]
 # on = [ "m" ]
 on = [ "b", "m" ]
 run = "plugin bookmarks save"
