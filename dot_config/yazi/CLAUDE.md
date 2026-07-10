@@ -30,6 +30,7 @@ ya pkg sync                    # インストール済みパッケージを pack
 ## 有効なプラグインとフレーバー
 
 - **プラグイン**: `dedukun/bookmarks` — vi スタイルのディレクトリブックマーク（永続化なし。ブックマークデータは `%APPDATA%\yazi\state\.dds` に保存）
+- **プラグイン**: `copy-git-relative-path`（ローカル、`plugins/copy-git-relative-path.yazi/`）— `c g` キーで Git リポジトリ内はルート相対、それ以外は絶対パスをコピー
 - **プラグイン**: `goto-projects`（ローカル、`plugins/goto-projects.yazi/`）— `g p` キーで Projects ディレクトリへ移動。Windows では `C:/Projects`、それ以外では `~/Projects`
 - **フレーバー（有効）**: `catppuccin-mocha`（`theme.toml` の `[flavor] dark` で設定）
 - **フレーバー（無効）**: `modus-vivendi`、`monokai`

@@ -5,6 +5,11 @@ run = "plugin goto-projects"
 desc = "Go to Projects directory"
 
 [[mgr.prepend_keymap]]
+on = [ "c", "g" ]
+run = "plugin copy-git-relative-path"
+desc = "Copy paths relative to the Git root"
+
+[[mgr.prepend_keymap]]
 on = [ "M" ]
 run = "plugin marktext"
 desc = "Open with MarkText"
