@@ -21,3 +21,6 @@ dot_config/nyagos/nyagos.lua
 {{ if ne .chezmoi.os "windows" }}
 bin/sql.cmd
 {{ end }}
+
+# .claude.json は Claude Code が実行時に書き換える動的な状態ファイルのため管理対象外
+.claude-config/jighead/.claude.json
