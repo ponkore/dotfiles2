@@ -78,42 +78,74 @@ return {
   end
 
   --
-  -- claude: ESC-Web 以下で実行する場合には CLAUDE_CONFIG_DIR を設定してから実行する
+  -- claude: 引数なしで起動した場合、どの CLAUDE_CONFIG_DIR で起動するかを
+  -- fzf メニューで選択させる（矢印キー+Enter、または数字キーで即決定）
   --
   local _claude_path = nyagos.which("claude") or "claude"
 
-  --
-  -- rclaude: ESC-Web であっても環境変数を設定せず claude を起動
-  --
-  nyagos.alias.rclaude = function(args)
-    local cmd = '"' .. _claude_path .. '"'
-    for _, v in ipairs(args) do
-      cmd = cmd .. " " .. v
+  local _claude_menu_items = {
+    { label = "1) 通常起動(Claude Pro)",      config_dir = nil },
+    { label = "2) jighead(Claude Max)",        config_dir = nyagos.env.USERPROFILE .. "\\.claude-config\\jighead" },
+    { label = "3) ESC-Web(Claude Enterprise)", config_dir = nyagos.env.USERPROFILE .. "\\.claude-config\\ESC-Web" },
+  }
+
+  -- fzf で claude 起動方法を選択させ、選ばれた項目 (テーブル) を返す。
+  -- キャンセル (Esc 等) の場合は nil を返す。
+  local function _claude_select_menu()
+    local tmp_menu = os.tmpname()
+    local mf = io.open(tmp_menu, "w")
+    for _, item in ipairs(_claude_menu_items) do
+      mf:write(item.label .. "\n")
     end
-    nyagos.exec(cmd)
+    mf:close()
+
+    local tmp_result = os.tmpname()
+    local fzf_cmd = 'type "' .. tmp_menu .. '"'
+      .. ' | fzf --prompt="claude> " --height=~40% --border'
+      .. ' --header="[Up/Down + Enter] or [1-3] で選択"'
+      .. ' --bind="1:pos(1)+accept,2:pos(2)+accept,3:pos(3)+accept"'
+      .. ' > "' .. tmp_result .. '"'
+    nyagos.exec(fzf_cmd)
+    os.remove(tmp_menu)
+
+    local rf = io.open(tmp_result, "r")
+    local selection = rf and rf:read("*l") or nil
+    if rf then rf:close() end
+    os.remove(tmp_result)
+
+    if not selection or selection == "" then
+      return nil
+    end
+    for _, item in ipairs(_claude_menu_items) do
+      if item.label == selection then
+        return item
+      end
+    end
+    return nil
   end
 
   nyagos.alias.claude = function(args)
-    local cwd = nyagos.getwd():gsub("\\", "/"):lower()
-    local esc_web_prefix = "c:/projects/esc-web"
-
-    local is_esc_web = (cwd == esc_web_prefix) or
-                       (cwd:sub(1, #esc_web_prefix + 1) == esc_web_prefix .. "/")
-
-    -- is_esc_web = false
-    if is_esc_web then
-      nyagos.env.CLAUDE_CONFIG_DIR = nyagos.env.USERPROFILE .. "\\.claude-config\\ESC-Web"
+    if #args > 0 then
+      local cmd = '"' .. _claude_path .. '"'
+      for _, v in ipairs(args) do
+        cmd = cmd .. " " .. v
+      end
+      nyagos.exec(cmd)
+      return
     end
 
-    local cmd = '"' .. _claude_path .. '"'
-    for _, v in ipairs(args) do
-      cmd = cmd .. " " .. v
+    local chosen = _claude_select_menu()
+    if not chosen then
+      print("claude: キャンセルしました")
+      return
     end
-    nyagos.exec(cmd)
 
-    if is_esc_web then
-      nyagos.env.CLAUDE_CONFIG_DIR = nil
-    end
+    local prev_config_dir = nyagos.env.CLAUDE_CONFIG_DIR
+    nyagos.env.CLAUDE_CONFIG_DIR = chosen.config_dir
+
+    nyagos.exec('"' .. _claude_path .. '"')
+
+    nyagos.env.CLAUDE_CONFIG_DIR = prev_config_dir
   end
 
   --

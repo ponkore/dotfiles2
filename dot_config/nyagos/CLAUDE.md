@@ -53,11 +53,19 @@ require("nyagos").init()
 
 yazi 終了後に、yazi 内で移動したディレクトリへシェルの cwd を同期する。
 
-#### `claude` — プロジェクト別設定付き Claude Code 起動
+#### `claude` — 設定選択メニュー付き Claude Code 起動
 
-カレントディレクトリが `C:/Projects/ESC-Web` 以下の場合、環境変数 `CLAUDE_CONFIG_DIR` を
-`%USERPROFILE%\.claude-config\ESC-Web` に設定してから claude を実行し、終了後に unset する。
-それ以外のディレクトリではそのまま実行。
+引数なしで実行した場合、fzf によるメニューで起動方法を選択させる（Up/Down + Enter、または
+数字キー 1〜3 で即決定）。
+
+| 選択肢 | タイトル | `CLAUDE_CONFIG_DIR` |
+|--------|----------|----------------------|
+| 1 | 通常起動(Claude Pro) | 設定しない |
+| 2 | jighead(Claude Max) | `%USERPROFILE%\.claude-config\jighead` |
+| 3 | ESC-Web(Claude Enterprise) | `%USERPROFILE%\.claude-config\ESC-Web` |
+
+選択した環境変数を設定してから claude を実行し、終了後に元の値へ戻す（キャンセル時は何もせず終了）。
+引数付きで実行した場合（例: `claude --version`）はメニューを出さず、環境変数を変更せずにそのまま実行する。
 
 再帰呼び出しを避けるため、nyagos 起動時に `nyagos.which("claude")` でフルパスを解決して実行する。
 
