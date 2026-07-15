@@ -1,0 +1,11 @@
+{
+  "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "language": "Japanese",
+  "autoUpdatesChannel": "latest",
+  "theme": "dark",
+  "effortLevel": "medium"
+}

@@ -17,5 +17,6 @@
     "command": "bash ~/.claude-config/ESC-Web/statusline-command.sh"
   },
   "language": "Japanese",
-  "theme": "dark"
+  "theme": "dark",
+  "model": "sonnet"
 }

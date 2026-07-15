@@ -5,6 +5,15 @@
 # PLAN: "Claude Pro" または "Claude Enterprise" を設定してください
 PLAN="Claude Enterprise"
 
+# CLAUDE_CONFIG_DIR が設定されている場合、そのディレクトリ名の最後の部分を
+# プランラベルに付記する (例: "Claude Enterprise(ESC-Web)")
+if [ -n "${CLAUDE_CONFIG_DIR:-}" ]; then
+    config_dir_name=$(basename "$CLAUDE_CONFIG_DIR")
+    if [ -n "$config_dir_name" ]; then
+        PLAN="${PLAN}(${config_dir_name})"
+    fi
+fi
+
 set -u
 
 ESC=$'\033'
@@ -33,6 +42,12 @@ fi
 current_dir=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 model_name=$(printf '%s' "$input" | jq -r '.model.display_name // "Claude"')
 transcript_path=$(printf '%s' "$input" | jq -r '.transcript_path // empty')
+effort_level=$(printf '%s' "$input" | jq -r '.effort.level // empty')
+
+# effort level をモデル名に付記 (例: "Sonnet 5(medium)")
+if [ -n "$effort_level" ]; then
+    model_name="${model_name}(${effort_level})"
+fi
 
 # カレントディレクトリ (ベース名のみ)
 if [ -n "$current_dir" ]; then

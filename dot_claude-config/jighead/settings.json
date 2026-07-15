@@ -1,0 +1,10 @@
+{
+  "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude-config/jighead/statusline-command.sh"
+  },
+  "effortLevel": "medium",
+  "theme": "dark",
+  "language": "Japanese"
+}
