@@ -2,8 +2,8 @@
 # Claude Code statusline
 # 表示項目: プラン識別子 | カレントディレクトリ | git ブランチ | モデル名 | コンテキスト使用量 (使用率)
 #
-# PLAN: "Claude Pro" または "Claude Enterprise" を設定してください
-PLAN="Claude Pro"
+# PLAN: Claude のプラン名 ("Claude Pro" / "Claude Max" / "Claude Enterprise") を設定してください
+PLAN="Claude Max"
 
 # CLAUDE_CONFIG_DIR が設定されている場合、そのディレクトリ名の最後の部分を
 # プランラベルに付記する (例: "Claude Pro(jighead)")
