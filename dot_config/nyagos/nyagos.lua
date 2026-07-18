@@ -25,6 +25,9 @@ return {
   -- %USERPROFILE%\bin が存在すれば PATH 先頭に追加
   prepend_path_if_dir(nyagos.env.USERPROFILE .. "\\bin")
 
+  -- %USERPROFILE%\.cargo\bin が存在すれば PATH 先頭に追加
+  prepend_path_if_dir(nyagos.env.USERPROFILE .. "\\.cargo\\bin")
+
   -- nyagos.histsize (default: 1000)
   nyagos.histsize = 100000
 

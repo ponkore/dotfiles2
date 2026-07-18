@@ -1,4 +1,5 @@
 {
+  "model": "sonnet",
   "hooks": {
     "PreToolUse": [
       {
@@ -18,5 +19,5 @@
   },
   "language": "Japanese",
   "theme": "dark",
-  "model": "sonnet"
+  "effortLevel": "medium"
 }

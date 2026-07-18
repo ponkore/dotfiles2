@@ -4,7 +4,10 @@
     "type": "command",
     "command": "bash ~/.claude-config/jighead/statusline-command.sh"
   },
+  "language": "Japanese",
   "effortLevel": "medium",
   "theme": "dark",
-  "language": "Japanese"
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  }
 }
