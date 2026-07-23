@@ -33,6 +33,10 @@ Plug 'lambdalisue/vim-fern'
 
 " #2
 let g:fern#default_hidden = 1
+let g:fern#drawer_width = 30
+
+" コマンドモードから :Fern と打った場合も drawer (左分割・幅小さめ) で開く
+cnoreabbrev <expr> Fern (getcmdtype() ==# ':' && getcmdline() ==# 'Fern') ? 'Fern -drawer' : 'Fern'
 
 nnoremap <silent> <C-n> :Fern . -drawer -toggle -reveal=%<CR>
 
