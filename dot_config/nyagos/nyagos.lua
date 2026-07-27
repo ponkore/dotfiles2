@@ -127,12 +127,18 @@ return {
     return nil
   end
 
+  -- --version / update の場合のみ fzf メニューを出さずそのまま実行する
+  local function _claude_skip_menu(args)
+    return #args == 1 and (args[1] == "--version" or args[1] == "update")
+  end
+
   nyagos.alias.claude = function(args)
-    if #args > 0 then
-      local cmd = '"' .. _claude_path .. '"'
-      for _, v in ipairs(args) do
-        cmd = cmd .. " " .. v
-      end
+    local cmd = '"' .. _claude_path .. '"'
+    for _, v in ipairs(args) do
+      cmd = cmd .. " " .. v
+    end
+
+    if _claude_skip_menu(args) then
       nyagos.exec(cmd)
       return
     end
@@ -146,7 +152,7 @@ return {
     local prev_config_dir = nyagos.env.CLAUDE_CONFIG_DIR
     nyagos.env.CLAUDE_CONFIG_DIR = chosen.config_dir
 
-    nyagos.exec('"' .. _claude_path .. '"')
+    nyagos.exec(cmd)
 
     nyagos.env.CLAUDE_CONFIG_DIR = prev_config_dir
   end
