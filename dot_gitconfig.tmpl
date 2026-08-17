@@ -1,6 +1,7 @@
 [core]
 	excludesfile = %(prefix)/Users/masao/.gitignore_global
 	autocrlf = false
+	editor = vim
 [difftool "sourcetree"]
 {{- if eq .chezmoi.os "darwin" }}
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
