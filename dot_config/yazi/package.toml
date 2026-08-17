@@ -1,19 +1,19 @@
 [[plugin.deps]]
 use = "dedukun/bookmarks"
 rev = "9ef1254"
-hash = "fc77f2bd3aad78199fbe11b727b1954f"
+hash = "92fbb5483657fa7976cdf4e0104e18e0"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "598cdb6"
-hash = "2ea53389fd01aa5ff48f34bceb5cedbc"
+rev = "3f2b882"
+hash = "34f9d185853feb314d567f9cac5ad7ae"
 
 [[flavor.deps]]
 use = "malick-tammal/monokai"
-rev = "7e709d4"
-hash = "e941611d88bdb95bab3184c3a5e018f8"
+rev = "57be034"
+hash = "9fbb5104646853a933446746b88118a6"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "9511cb0"
-hash = "5ebc8659108fcb68fe853e523115ed3c"
+rev = "be0b21d"
+hash = "ce320f877fe709b189433941aba747c4"

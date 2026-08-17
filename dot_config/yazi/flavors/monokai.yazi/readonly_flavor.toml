@@ -132,12 +132,7 @@ border = { fg = "#78DCE8" }
 active = { reversed = true }
 inactive = {}
 
-# Icons
-icon_file = ""
-icon_folder = ""
-icon_command = ""
-
-# : Task manager {{{
+# Task manager
 [tasks]
 border = { fg = "#78DCE8" }
 title = {}
@@ -158,7 +153,8 @@ rules = [
   { mime = "image/*", fg = "#FFD866" },
 
   # Media
-  { mime = "{audio,video}/*", fg = "#A9DC76" },
+  { mime = "{video}/*", fg = "#A9DC76" },
+  { mime = "{audio}/*", fg = "#AB9DF2" },
 
   # Archives
   { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#FF6188" },
@@ -169,14 +165,36 @@ rules = [
   # Empty files
   { mime = "inode/empty", fg = "#FF6188" },
 
-  # Special files
-  { url = "*", is = "orphan", bg = "#FF6188" },
-  { url = "*", is = "exec", fg = "#A9DC76" },
-
-  # Dummy files
-  { url = "*", is = "dummy", bg = "#FF6188" },
-  { url = "*/", is = "dummy", bg = "#FF6188" },
+  # Folders
+  { url = "**/Desktop/", fg = "#78DCE8" },
+  { url = "**/Downloads/", fg = "#FFD866" },
+  { url = "**/Documents/", fg = "#A9DC76" },
+  { url = "**/Music/", fg = "#78DCE8" },
+  { url = "**/Pictures/", fg = "#AB9DF2" },
+  { url = "**/Videos/", fg = "#FF6188" },
+  { url = "**/Screenshots/", fg = "#AB9DF2" },
 
   # Fallback
-  { url = "*/", fg = "#FC9767", bold = true },
+  { url = "*/", fg = "#FC9867", bold = true },
+]
+
+# Icons
+[icon]
+prepend_conds = [{ if = "dir", text = "" }]
+
+prepend_globs = [
+  { url = "*.{jpg,jpeg,png,gif,webp,svg,bmp,ico,tiff,heic}", text = "", fg = "#FFD866" },
+  { url = "*.{mp4,mkv,mov,avi,webm,flv,wmv,mpeg}", text = "", fg = "#A9DC76" },
+  { url = "*.{mp3,flac,wav,m4a,ogg,opus,aac,wma}", text = "", fg = "#AB9DF2" },
+  { url = "*.{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", text = "", fg = "#FF6188" },
+]
+
+dirs = [
+  { name = "Desktop", text = "", fg = "#78DCE8" },
+  { name = "Downloads", text = "", fg = "#FFD866" },
+  { name = "Documents", text = "", fg = "#A9DC76" },
+  { name = "Music", text = "", fg = "#78DCE8" },
+  { name = "Pictures", text = "", fg = "#AB9DF2" },
+  { name = "Videos", text = "", fg = "#FF6188" },
+  { name = "Screenshots", text = "", fg = "#AB9DF2" },
 ]

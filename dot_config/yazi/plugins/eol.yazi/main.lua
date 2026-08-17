@@ -57,12 +57,27 @@ end)
 
 local M = {}
 
---- フォルダ読み込み時に呼ばれる（非同期）
-function M:fetch(job)
+local function fetch(_, job)
 	for _, file in ipairs(job.files) do
 		remember(key_of(file), detect(file.url))
 	end
 	return true
+end
+
+--- フォルダ読み込み時に呼ばれる（非同期）
+--- yazi の fetcher throttle/retry 機構（ya.throttle）に対応するため、
+--- 存在する場合はコルーチン経由で retry シグナルを返す（git.yazi の fetch_compact に倣う）
+function M:fetch(job)
+	if ya.throttle then
+		fetch(self, job)
+		return ya.co(function()
+			for _, file in ipairs(job.files) do
+				coroutine.yield(file, { retry = true })
+			end
+		end)
+	else
+		return fetch(self, job)
+	end
 end
 
 --- ステータスバー用のセグメントを返す（同期）
