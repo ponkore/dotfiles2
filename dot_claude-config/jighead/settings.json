@@ -1,13 +1,13 @@
 {
-  "model": "sonnet",
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude-config/jighead/statusline-command.sh"
   },
-  "language": "Japanese",
-  "effortLevel": "medium",
-  "theme": "dark",
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true
-  }
+  },
+  "language": "Japanese",
+  "effortLevel": "high",
+  "theme": "dark"
 }
