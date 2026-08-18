@@ -1,7 +1,55 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
+local mux = wezterm.mux
 
 local M = {}
+
+-- 現在のワークスペース名をリネームする
+local rename_workspace = act.PromptInputLine {
+  description = 'Rename workspace:',
+  action = wezterm.action_callback(function(_, _, line)
+    -- ESC でキャンセルした場合は line が nil
+    if line and line ~= '' then
+      mux.rename_workspace(mux.get_active_workspace(), line)
+    end
+  end),
+}
+
+-- 名前を指定してワークスペースを作成する (既存名の場合はそのワークスペースへ移動)
+local create_workspace = act.PromptInputLine {
+  description = 'Create workspace:',
+  action = wezterm.action_callback(function(win, pane, line)
+    if line and line ~= '' then
+      win:perform_action(act.SwitchToWorkspace { name = line }, pane)
+    end
+  end),
+}
+
+-- ワークスペースを一覧表示し、選択したものに移動する
+local switch_workspace = wezterm.action_callback(function(window, pane)
+  local active = mux.get_active_workspace()
+  local choices = {}
+  for _, name in ipairs(mux.get_workspace_names()) do
+    table.insert(choices, {
+      id = name,
+      label = (name == active) and (name .. ' *') or name,
+    })
+  end
+  window:perform_action(
+    act.InputSelector {
+      title = 'Select workspace',
+      choices = choices,
+      fuzzy = true,
+      fuzzy_description = 'Workspace: ',
+      action = wezterm.action_callback(function(win, p, id, _)
+        if id then
+          win:perform_action(act.SwitchToWorkspace { name = id }, p)
+        end
+      end),
+    },
+    pane
+  )
+end)
 
 function M.apply(config)
   config.leader = { key = 't', mods = 'CTRL', timeout_milliseconds = 1000 }
@@ -15,7 +63,9 @@ function M.apply(config)
     { key = 'o',     mods = 'LEADER',       action = act.ActivatePaneDirection 'Next' },
     { key = ';',     mods = 'LEADER',       action = act.ActivatePaneDirection 'Prev' },
     { key = 'o',     mods = 'LEADER|CTRL',  action = act.RotatePanes 'Clockwise' },
-    { key = 's',     mods = 'LEADER',       action = act.ShowLauncherArgs { flags = 'WORKSPACES', title = 'Select workspace' } },
+    { key = 's',     mods = 'LEADER',       action = switch_workspace },
+    { key = 'S',     mods = 'LEADER|SHIFT', action = create_workspace },
+    { key = '$',     mods = 'LEADER|SHIFT', action = rename_workspace },
     { key = 'z',     mods = 'LEADER',       action = act.TogglePaneZoomState },
     { key = 'x',     mods = 'LEADER',       action = act.ActivateCopyMode },
     { key = 'f',     mods = 'LEADER',       action = act.EmitEvent 'fit-window-to-workarea' },
