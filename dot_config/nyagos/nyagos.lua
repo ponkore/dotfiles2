@@ -32,6 +32,20 @@ return {
   nyagos.histsize = 100000
 
   --
+  -- keybind
+  --
+  -- Ctrl-E: zsh の autosuggest 風に、行末なら履歴の予測候補を確定し、
+  --         それ以外の位置では本来の END_OF_LINE (行末へ移動) として動作する。
+  --         (this.pos はバイト単位・1始まりなので、行末では #this.text + 1 になる)
+  nyagos.key.c_e = function(this)
+    if this.pos > #this.text then
+      this:call("ACCEPT_PREDICT")
+    else
+      this:call("END_OF_LINE")
+    end
+  end
+
+  --
   -- alias
   --
   nyagos.alias.cat="bat"
