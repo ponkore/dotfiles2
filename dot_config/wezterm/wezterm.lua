@@ -4,6 +4,7 @@ local keymap = require 'keymap'
 local appearance = require 'appearance'
 local actions = require 'actions'
 local window = require 'window'
+local workspace = require 'workspace'
 local config = {}
 if wezterm.config_builder then
   config = wezterm.config_builder()
@@ -28,6 +29,11 @@ actions.apply(config)
 -- window size / position (起動時に作業領域いっぱいの高さ + 右端寄せ)
 --
 window.apply(config)
+
+--
+-- workspace (外部から SwitchToWorkspace するためのイベントハンドラ)
+--
+workspace.apply(config)
 
 --
 -- other configration
