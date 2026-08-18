@@ -18,6 +18,7 @@ function M.apply(config)
     { key = 's',     mods = 'LEADER',       action = act.ShowLauncherArgs { flags = 'WORKSPACES', title = 'Select workspace' } },
     { key = 'z',     mods = 'LEADER',       action = act.TogglePaneZoomState },
     { key = 'x',     mods = 'LEADER',       action = act.ActivateCopyMode },
+    { key = 'f',     mods = 'LEADER',       action = act.EmitEvent 'fit-window-to-workarea' },
   }
 end
 
