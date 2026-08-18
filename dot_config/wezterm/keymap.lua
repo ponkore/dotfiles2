@@ -27,13 +27,17 @@ local create_workspace = act.PromptInputLine {
 }
 
 -- ワークスペースを一覧表示し、選択したものに移動する
+-- 名前順に 1. 2. ... と番号を振り、現在のワークスペースには * を付ける
 local switch_workspace = wezterm.action_callback(function(window, pane)
   local active = mux.get_active_workspace()
+  local names = mux.get_workspace_names()
+  table.sort(names)
+
   local choices = {}
-  for _, name in ipairs(mux.get_workspace_names()) do
+  for i, name in ipairs(names) do
     table.insert(choices, {
       id = name,
-      label = (name == active) and (name .. ' *') or name,
+      label = string.format('%d. %s%s', i, name, (name == active) and ' *' or ''),
     })
   end
   window:perform_action(
