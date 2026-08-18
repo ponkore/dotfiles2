@@ -1,5 +1,5 @@
 {
-  "model": "sonnet",
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -101,6 +101,14 @@
             "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event Notification 2>/dev/null || true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh waiting"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -109,6 +117,14 @@
           {
             "type": "command",
             "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event Stop 2>/dev/null || true"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh done"
           }
         ]
       }
@@ -141,6 +157,14 @@
             "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event UserPromptSubmit 2>/dev/null || true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh clear"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -161,6 +185,14 @@
             "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event SessionEnd 2>/dev/null || true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh clear"
+          }
+        ]
       }
     ]
   },
@@ -174,19 +206,9 @@
     "chrome-devtools-mcp@claude-plugins-official": false
   },
   "language": "Japanese",
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "theme": "dark",
-  "mcpServers": {
-    "chrome-devtools": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "chrome-devtools-mcp@1.7.0",
-        "--browserUrl=http://127.0.0.1:9222"
-      ]
-    }
-  },
   "autoMode": {
     "environment": [
       "### Org-wide",
@@ -213,5 +235,15 @@
       "**Trusted repo**: C:\\Users\\masao\\.config (the git repository the agent started in) — this repo has no tracked files and no configured remotes",
       "**Org-specific CLIs**: None configured — chezmoi, wmux, and yazi are personal tooling, not org-specific"
     ]
+  },
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@1.7.0",
+        "--browserUrl=http://127.0.0.1:9222"
+      ]
+    }
   }
 }

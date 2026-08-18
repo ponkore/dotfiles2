@@ -1,6 +1,7 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
 local mux = wezterm.mux
+local notification = require 'notification'
 
 local M = {}
 
@@ -69,6 +70,9 @@ function M.apply(config)
     { key = 'z',     mods = 'LEADER',       action = act.TogglePaneZoomState },
     { key = 'x',     mods = 'LEADER',       action = act.ActivateCopyMode },
     { key = 'f',     mods = 'LEADER',       action = act.EmitEvent 'fit-window-to-workarea' },
+    -- Claude Code からの通知 ([WAIT] / [DONE] の付いたタブ) へ移動する
+    { key = 'u',     mods = 'LEADER',       action = notification.select },
+    { key = 'g',     mods = 'LEADER',       action = notification.jump_next },
   }
 end
 
