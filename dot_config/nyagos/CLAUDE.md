@@ -48,8 +48,9 @@ require("nyagos").init()
 | `lg` | `lazygit` | lazygit 起動 |
 | `ESC_Web` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 ESC_Web` | WezTerm ワークスペース ESC_Web を開く |
 | `RINSETSU` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 RINSETSU` | WezTerm ワークスペース RINSETSU を開く |
+| `config` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 config` | WezTerm ワークスペース config を開く |
 
-#### `ESC_Web` / `RINSETSU` — WezTerm ワークスペース起動
+#### `ESC_Web` / `RINSETSU` / `config` — WezTerm ワークスペース起動
 
 `~/.local/bin/ws.ps1` を pwsh 経由で呼び出し、指定ワークスペース (無ければ上下 1:2 分割 +
 上ペイン yazi / 下ペイン nyagos のレイアウトを構築してから) へ移動する。

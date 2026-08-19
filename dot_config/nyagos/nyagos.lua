@@ -64,6 +64,7 @@ return {
   local _ws_ps1 = nyagos.env.USERPROFILE .. "\\.local\\bin\\ws.ps1"
   nyagos.alias.ESC_Web = 'pwsh -NoProfile -File "' .. _ws_ps1 .. '" ESC_Web'
   nyagos.alias.RINSETSU = 'pwsh -NoProfile -File "' .. _ws_ps1 .. '" RINSETSU'
+  nyagos.alias.config = 'pwsh -NoProfile -File "' .. _ws_ps1 .. '" config'
 
   --
   -- prompt (starship)

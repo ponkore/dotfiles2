@@ -20,7 +20,7 @@
 
 .EXAMPLE
   ws
-  fzf メニューで ESC_Web / RINSETSU を選ぶ。
+  fzf メニューで ESC_Web / RINSETSU / config を選ぶ。
 
 .EXAMPLE
   ws RINSETSU
@@ -31,7 +31,7 @@
 #>
 [CmdletBinding()]
 param(
-    # 環境名 (ESC_Web / RINSETSU)。省略時は fzf で選択する
+    # 環境名 (ESC_Web / RINSETSU / config)。省略時は fzf で選択する
     [Parameter(Position = 0)]
     [string]$Name,
 
@@ -64,6 +64,13 @@ $Environments = @(
         Workspace     = 'RINSETSU'
         Dir           = 'C:/Projects/nel/RINSETSU'
         Title         = 'RINSETSU'
+        BottomPercent = 66
+    }
+    [PSCustomObject]@{
+        Name          = 'config'
+        Workspace     = 'config'
+        Dir           = "$env:USERPROFILE/.config"
+        Title         = 'config'
         BottomPercent = 66
     }
 )
