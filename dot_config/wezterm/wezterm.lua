@@ -5,6 +5,7 @@ local appearance = require 'appearance'
 local actions = require 'actions'
 local window = require 'window'
 local workspace = require 'workspace'
+local title = require 'title'
 local config = {}
 if wezterm.config_builder then
   config = wezterm.config_builder()
@@ -34,6 +35,11 @@ window.apply(config)
 -- workspace (外部から SwitchToWorkspace するためのイベントハンドラ)
 --
 workspace.apply(config)
+
+--
+-- window title
+--
+title.apply(config)
 
 --
 -- other configration
