@@ -8,6 +8,8 @@ nyagos（Windows 向けシェル）の Lua 設定ファイル群。
 ~/.nyagos.lua               # nyagos 起動時に読み込まれるエントリーポイント
 ~/.config/nyagos/
   nyagos.lua                # メイン設定ファイル（~/.nyagos.lua から呼び出される）
+  workspace.lua             # WezTerm ワークスペース切替（nyagos.lua から require）
+  zoxide.lua                # zoxide 連携（nyagos.lua から require）
   CLAUDE.md                 # このファイル
 ```
 
@@ -46,18 +48,46 @@ require("nyagos").init()
 | `di` | `git diff` | |
 | `zoom` | `wezterm cli zoom-pane --toggle` | WezTerm ペインのズーム切り替え |
 | `lg` | `lazygit` | lazygit 起動 |
-| `ESC_Web` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 ESC_Web` | WezTerm ワークスペース ESC_Web を開く |
-| `RINSETSU` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 RINSETSU` | WezTerm ワークスペース RINSETSU を開く |
-| `config` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 config` | WezTerm ワークスペース config を開く |
+| `ESC_Web` / `RINSETSU` / `config` | workspace.lua の lua 実装 | WezTerm ワークスペースへ直接切り替える |
+| `ws` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1` | fzf で選んで WezTerm ワークスペースを開く |
 
-#### `ESC_Web` / `RINSETSU` / `config` — WezTerm ワークスペース起動
+#### `ESC_Web` / `RINSETSU` / `config` — WezTerm ワークスペース切替（lua 実装）
 
-`~/.local/bin/ws.ps1` を pwsh 経由で呼び出し、指定ワークスペース (無ければ上下 1:2 分割 +
-上ペイン yazi / 下ペイン nyagos のレイアウトを構築してから) へ移動する。
-`PATHEXT` に `.ps1` が含まれないため、`pwsh -NoProfile -File` でフルパス指定して起動する。
+`workspace.lua` の lua 実装で、fzf メニューを出さずに指定ワークスペースへ直接切り替える。
+pwsh の起動コスト（約 1 秒）が無くなり、既存ワークスペースへの移動は `wezterm cli list`
+1 回分（数十 ms）で済む。
 
-引数なしで `ws.ps1` を実行すると fzf で環境を選択できる。環境定義 (作業ディレクトリ・
-タブタイトル等) は `ws.ps1` 冒頭の `$Environments` にまとまっている。
+- 対象ワークスペースが既に存在する場合はそこへ移動するだけ
+- 存在しない場合は新規ウィンドウとして作成し、上下 1:2 分割（上ペイン yazi / 下ペイン
+  nyagos、フォーカスは下）を構築してから移動する
+
+環境定義（作業ディレクトリ・タブタイトル・分割比）は `workspace.lua` 冒頭の
+`_environments` にまとまっている。環境を増やすとその名前の alias が自動的に登録される。
+
+ワークスペースの切り替えは `wezterm cli` に該当サブコマンドが無いため、OSC 1337
+SetUserVar でユーザー変数 `switch_workspace` を設定し、WezTerm 側
+（`~/.config/wezterm/workspace.lua`）のイベントハンドラに行わせる。OSC は加工されない
+生のバイト列を流す必要があるため `nyagos.write` ではなく `io.write` を使う。
+
+実装上の注意:
+
+- パス中の `\` をエスケープせずに書けるよう、パス文字列は `[[...]]` で記述する
+- `wezterm` は起動時に `nyagos.which` でフルパスを解決する。カレントディレクトリに
+  `wezterm.lua` があると（`~/.config/wezterm/` がまさにそれ）nyagos がそちらを
+  コマンドとして実行してしまうため
+- nyagos の lua には sleep が無いため、新規ウィンドウが実サイズになるのを待つ処理は
+  `wezterm cli list` の呼び出し自体（1 回あたり数十 ms）をウェイト代わりにポーリングする
+- `wezterm cli spawn` / `split-pane` の `--cwd` は実際には効かず、新しいペインの作業
+  ディレクトリは実行時の環境変数 `PWD` から決まるため、呼び出し前後で `PWD` を差し替える
+
+#### `ws` — WezTerm ワークスペースを fzf で選んで開く
+
+`~/.local/bin/ws.ps1` を pwsh 経由で呼び出す。`PATHEXT` に `.ps1` が含まれないため、
+`pwsh -NoProfile -File` でフルパス指定して起動する。
+
+引数なしなら fzf メニュー（Up/Down + Enter、または数字キーで即決定）、`ws RINSETSU` の
+ように環境名を渡せばメニューを出さずに開く。`-Dir` / `-Workspace` / `-Title` /
+`-BottomPercent` / `-FocusTop` で環境定義を上書きできるのも ws.ps1 側だけの機能。
 
 ### 関数型エイリアス
 
