@@ -32,6 +32,7 @@ ya pkg sync                    # インストール済みパッケージを pack
 - **プラグイン**: `dedukun/bookmarks` — vi スタイルのディレクトリブックマーク（永続化なし。ブックマークデータは `%APPDATA%\yazi\state\.dds` に保存）
 - **プラグイン**: `copy-git-relative-path`（ローカル、`plugins/copy-git-relative-path.yazi/`）— `c g` キーで Git リポジトリ内はルート相対、それ以外は絶対パスをコピー
 - **プラグイン**: `goto-projects`（ローカル、`plugins/goto-projects.yazi/`）— `g p` キーで Projects ディレクトリへ移動。Windows では `C:/Projects`、それ以外では `~/Projects`
+- **プラグイン**: `reveal-in-file-manager`（ローカル、`plugins/reveal-in-file-manager.yazi/`）— `E` キーで現在のディレクトリを OS のファイルマネージャーで開く。Windows では `explorer`、macOS では `open`（`uname -s` が `Darwin` の場合）。それ以外のプラットフォームではエラー通知
 - **フレーバー（有効）**: `catppuccin-mocha`（`theme.toml` の `[flavor] dark` で設定）
 - **フレーバー（無効）**: `modus-vivendi`、`monokai`
 
@@ -52,6 +53,8 @@ yazi v25.5.28 以降、コマンド発行には `ya.emit()` を使用します�
 ```lua
 ya.emit("cd", { dir })
 ```
+
+外部プロセスの起動に `Command(...):spawn()` を使ってはいけません。返り値の `Child` を破棄した時点で子プロセスが kill されるため、`explorer` のように「起動してすぐ終了し、実処理を別プロセスへ引き渡す」コマンドは何も起きずに終わります。待ち受けが不要な場合でも `:status()`（または `:output()`）を使ってください。どちらも即座に返ります。
 
 ## ブックマークのキーバインド
 
