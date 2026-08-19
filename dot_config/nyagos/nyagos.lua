@@ -59,6 +59,12 @@ return {
   nyagos.alias.lg="lazygit"
   nyagos.alias.sql="sql -name ESC_Web2"  -- 実体は ~/bin/sql.cmd
 
+  -- wezterm ワークスペースを開く (実体は ~/.local/bin/ws.ps1)
+  -- PATHEXT に .ps1 は含まれないため pwsh 経由で起動する
+  local _ws_ps1 = nyagos.env.USERPROFILE .. "\\.local\\bin\\ws.ps1"
+  nyagos.alias.ESC_Web = 'pwsh -NoProfile -File "' .. _ws_ps1 .. '" ESC_Web'
+  nyagos.alias.RINSETSU = 'pwsh -NoProfile -File "' .. _ws_ps1 .. '" RINSETSU'
+
   --
   -- prompt (starship)
   --

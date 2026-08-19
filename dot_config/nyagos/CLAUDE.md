@@ -46,6 +46,17 @@ require("nyagos").init()
 | `di` | `git diff` | |
 | `zoom` | `wezterm cli zoom-pane --toggle` | WezTerm ペインのズーム切り替え |
 | `lg` | `lazygit` | lazygit 起動 |
+| `ESC_Web` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 ESC_Web` | WezTerm ワークスペース ESC_Web を開く |
+| `RINSETSU` | `pwsh -NoProfile -File ~/.local/bin/ws.ps1 RINSETSU` | WezTerm ワークスペース RINSETSU を開く |
+
+#### `ESC_Web` / `RINSETSU` — WezTerm ワークスペース起動
+
+`~/.local/bin/ws.ps1` を pwsh 経由で呼び出し、指定ワークスペース (無ければ上下 1:2 分割 +
+上ペイン yazi / 下ペイン nyagos のレイアウトを構築してから) へ移動する。
+`PATHEXT` に `.ps1` が含まれないため、`pwsh -NoProfile -File` でフルパス指定して起動する。
+
+引数なしで `ws.ps1` を実行すると fzf で環境を選択できる。環境定義 (作業ディレクトリ・
+タブタイトル等) は `ws.ps1` 冒頭の `$Environments` にまとまっている。
 
 ### 関数型エイリアス
 
