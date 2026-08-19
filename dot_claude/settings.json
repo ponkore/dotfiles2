@@ -1,107 +1,7 @@
 {
   "model": "opus",
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Bash 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Read 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Write 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Edit 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Grep",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Grep 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Glob",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Glob 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Agent 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "WebSearch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" WebSearch 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "WebFetch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" WebFetch 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" Skill 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
     "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event Notification 2>/dev/null || true"
-          }
-        ]
-      },
       {
         "hooks": [
           {
@@ -116,35 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event Stop 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "bash ~/.claude/hooks/wezterm-notify.sh done"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event SubagentStop 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event SessionStart 2>/dev/null || true"
           }
         ]
       }
@@ -154,38 +26,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event UserPromptSubmit 2>/dev/null || true"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "bash ~/.claude/hooks/wezterm-notify.sh clear"
           }
         ]
       }
     ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event PreToolUse 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
     "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"C:/Users/masao/AppData/Local/Programs/wmux/resources/cli/wmux-hook.js\" --event SessionEnd 2>/dev/null || true"
-          }
-        ]
-      },
       {
         "hooks": [
           {
@@ -202,7 +48,6 @@
   },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "wmux-orchestrator@wmux": true,
     "chrome-devtools-mcp@claude-plugins-official": false
   },
   "language": "Japanese",
@@ -231,9 +76,9 @@
       "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
-      "**Primary use of Claude Code**: software development, dotfiles/config management (chezmoi) and terminal tooling (wmux, yazi)",
+      "**Primary use of Claude Code**: software development, dotfiles/config management (chezmoi) and terminal tooling (yazi)",
       "**Trusted repo**: C:\\Users\\masao\\.config (the git repository the agent started in) — this repo has no tracked files and no configured remotes",
-      "**Org-specific CLIs**: None configured — chezmoi, wmux, and yazi are personal tooling, not org-specific"
+      "**Org-specific CLIs**: None configured — chezmoi and yazi are personal tooling, not org-specific"
     ]
   },
   "mcpServers": {
@@ -245,5 +90,8 @@
         "--browserUrl=http://127.0.0.1:9222"
       ]
     }
+  },
+  "env": {
+    "NODE_EXTRA_CA_CERTS": "C:/Users/masao/.claude/obsidian-local-rest-api.crt"
   }
 }
