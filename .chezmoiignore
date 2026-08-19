@@ -24,3 +24,6 @@ bin/sql.cmd
 
 # .claude.json は Claude Code が実行時に書き換える動的な状態ファイルのため管理対象外
 .claude-config/jighead/.claude.json
+
+# Obsidian Local REST API の自己署名証明書はマシンごとに生成されるため管理対象外
+.claude/obsidian-local-rest-api.crt
