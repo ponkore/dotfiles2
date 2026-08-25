@@ -6,6 +6,7 @@ local actions = require 'actions'
 local window = require 'window'
 local workspace = require 'workspace'
 local title = require 'title'
+local dialog = require 'dialog'
 local config = {}
 if wezterm.config_builder then
   config = wezterm.config_builder()
@@ -40,6 +41,11 @@ workspace.apply(config)
 -- window title
 --
 title.apply(config)
+
+--
+-- message dialog (外部から SetUserVar でメッセージを表示するためのハンドラ)
+--
+dialog.apply(config)
 
 --
 -- other configration
