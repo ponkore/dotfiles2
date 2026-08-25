@@ -22,6 +22,13 @@ end
 -- OSC 1337 SetUserVar でユーザー変数 switch_workspace を設定し、
 -- wezterm 側 (~/.config/wezterm/workspace.lua) のイベントハンドラに行わせる。
 --
+-- この仕組みには制約が 1 つある。user-var-changed イベントは、OSC を出した
+-- ペインが GUI ウィンドウに載っているときにしか発火しない。1 度切り替えると
+-- 元のワークスペースは GUI から外れるため、同じシェルから続けて
+-- `RINSETSU && ESC_Web` のように実行しても、切り替わるのは最初の 1 回だけになる
+-- (2 つ目もレイアウトの構築までは行われる)。切り替えられなかった場合は
+-- その旨を表示するので Ctrl-t s などで移動すること。
+--
 -- パス中の \ をエスケープせずに書けるよう、パス文字列は [[...]] で記述する。
 --
 
@@ -110,32 +117,34 @@ local function workspace_exists(name)
     return false
 end
 
--- 指定ペインの行数 (list の SIZE 列 COLSxROWS)
-local function pane_rows(pane_id)
-    local pattern = "^%s*%d+%s+%d+%s+" .. pane_id .. "%s+%S+%s+%d+x(%d+)%s"
-    for _, line in ipairs(cli_list()) do
-        local rows = line:match(pattern)
-        if rows then return tonumber(rows) end
+-- 現在 GUI に表示されているワークスペース名
+-- list-clients の列: USER HOST PID CONNECTED IDLE WORKSPACE FOCUS [SSH_AUTH_SOCK]
+local function focused_workspace()
+    for line in wezterm_cli("list-clients"):gmatch("[^\r\n]+") do
+        if not line:match("^USER%s") then
+            local f = {}
+            for w in line:gmatch("%S+") do f[#f + 1] = w end
+            if #f >= 6 then return f[6] end
+        end
     end
-    return 0
+    return nil
 end
 
 -- OSC 1337 SetUserVar でワークスペース切り替えを wezterm 本体に依頼する。
 -- nyagos.write ではなく io.write を使い、加工されない生のバイト列を端末へ流す。
+--
+-- 切り替えは非同期なので、実際に切り替わったかを list-clients で確認する。
+-- nyagos の lua には sleep が無いため、wezterm cli の呼び出し自体
+-- (1 回あたり数十 ms) をウェイト代わりにしてポーリングする。
 local function switch_workspace(name)
+    if focused_workspace() == name then return end
     io.write("\27]1337;SetUserVar=switch_workspace=" .. base64(name) .. "\7")
     io.stdout:flush()
-end
-
--- 新規ウィンドウが GUI に載って実サイズになるまで待つ。
--- nyagos の lua には sleep が無いため、wezterm cli list の呼び出し自体
--- （1 回あたり数十 ms）をウェイト代わりにしてポーリングする。
-local function wait_pane_resized(pane_id, rows_before)
-    local deadline = os.time() + 3
-    for _ = 1, 100 do
-        if pane_rows(pane_id) ~= rows_before then return end
-        if os.time() >= deadline then return end
+    for _ = 1, 10 do
+        if focused_workspace() == name then return end
     end
+    warn(("%s へ自動で移動できませんでした (このペインは GUI に表示されていません)。"):format(name))
+    warn("Ctrl-t s で移動してください。")
 end
 
 -- ------------------------------------------------------ レイアウト構築処理 --
@@ -149,14 +158,11 @@ local function build_layout(e)
 
     wezterm_cli(("set-tab-title --pane-id %s %s"):format(top, q(e.title)))
 
-    -- 分割前にワークスペースへ移動する。
-    -- 新規ウィンドウは GUI に載るまで既定サイズ(80x24)のままで、
-    -- その状態で分割すると後のリサイズで 1:2 の比率が崩れてしまうため。
-    local rows_before = pane_rows(top)
-    switch_workspace(e.workspace)
-    wait_pane_resized(top, rows_before)
-
-    -- 下ペイン(2/3)を作り nyagos を起動し、そちらへフォーカスする
+    -- 下ペイン(2/3)を作り nyagos を起動し、そちらへフォーカスする。
+    --
+    -- 新規ウィンドウは GUI に載るまで initial_cols x initial_rows のサイズのままだが、
+    -- wezterm 側 (~/.config/wezterm/window.lua) でそれを実ウィンドウとほぼ同じ
+    -- サイズにしてあるため、GUI に載る前に分割しても比率は崩れない。
     local bottom = wezterm_cli(("split-pane --pane-id %s --bottom --percent %d --cwd %s -- %s")
         :format(top, e.bottom_percent, q(e.dir), q(nyagos.exe))):match("%d+")
     if not bottom then
@@ -164,6 +170,9 @@ local function build_layout(e)
     end
 
     wezterm_cli("activate-pane --pane-id " .. bottom)
+
+    -- レイアウトが出来上がってからワークスペースへ移動する
+    switch_workspace(e.workspace)
 end
 
 local function open(name)

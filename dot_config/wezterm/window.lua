@@ -9,6 +9,7 @@ local is_windows = wezterm.target_triple:find('windows') ~= nil
 --   数値   : その桁数に固定する
 M.columns = nil
 M.default_columns = 145 -- 記録がまだ無いときに使う桁数
+M.default_rows = 70     -- 記録がまだ無いときに使う行数
 
 -- PowerShell から情報が取れなかったときのフォールバック値
 M.fallback_taskbar_height = 48 -- 下端タスクバーの高さ
@@ -33,6 +34,7 @@ foreach ($s in [System.Windows.Forms.Screen]::AllScreens) {
 
 local STATE_DIR = wezterm.home_dir .. '/.local/share/wezterm'
 local CACHE_PATH = STATE_DIR .. '/workarea-cache.txt'
+-- 直前のウィンドウサイズ ("桁数 行数" の 1 行)
 local COLUMNS_PATH = STATE_DIR .. '/window-columns.txt'
 
 local function read_file(path)
@@ -108,16 +110,22 @@ local function desktop_info()
 end
 
 --
--- 幅(桁数)の記録
+-- ウィンドウサイズ(桁数 x 行数)の記録
 --
 
-local function remembered_columns()
+-- 行数を記録していなかった頃の形式 (桁数のみ) も読めるようにしておく
+local function remembered_size()
   local body = read_file(COLUMNS_PATH)
-  return body and tonumber(body:match('%d+'))
+  if not body then return nil, nil end
+  local cols, rows = body:match('(%d+)%s+(%d+)')
+  if cols then return tonumber(cols), tonumber(rows) end
+  return tonumber(body:match('%d+')), nil
 end
 
-local function remember_columns(cols)
-  if cols and cols > 0 then write_file(COLUMNS_PATH, tostring(cols)) end
+local function remember_size(cols, rows)
+  if cols and cols > 0 and rows and rows > 0 then
+    write_file(COLUMNS_PATH, string.format('%d %d', cols, rows))
+  end
 end
 
 --
@@ -166,7 +174,7 @@ function M.fit(gui, has_title_bar, pane)
   if pdims and pdims.cols and pdims.cols > 0 then
     local cell_width = pdims.pixel_width / pdims.cols
     local padding = dims.pixel_width - pdims.pixel_width
-    local cols = M.columns or remembered_columns() or M.default_columns
+    local cols = M.columns or remembered_size() or M.default_columns
     width = math.floor(cols * cell_width + padding + 0.5)
   end
 
@@ -178,6 +186,16 @@ function M.fit(gui, has_title_bar, pane)
 end
 
 function M.apply(config)
+  -- `wezterm cli spawn --new-window` で作ったウィンドウは、GUI ウィンドウに
+  -- 載るまで initial_cols x initial_rows のサイズ (既定 80x24) のままとなる。
+  -- 小さいサイズのまま分割すると、後で GUI に載って拡大されるときに
+  -- 差分が上下ペインへ「均等に」配られるため、指定した比率が崩れてしまう
+  -- (例: 24 行で 1:2 に割った 8/15 行が、73 行になると 33/39 行になる)。
+  -- 実ウィンドウとほぼ同じサイズを初期値にしておけば拡大自体が起きない。
+  local cols, rows = remembered_size()
+  config.initial_cols = M.columns or cols or M.default_columns
+  config.initial_rows = rows or M.default_rows
+
   -- macOS では PowerShell が無いので何もしない (別途対応予定)
   if not is_windows then return end
 
@@ -201,13 +219,16 @@ function M.apply(config)
     pcall(M.fit, gui, has_title_bar, pane)
   end)
 
-  -- 手でリサイズした桁数を次回の起動幅として覚えておく (M.columns が nil のとき)
+  -- 手でリサイズしたサイズを次回の起動サイズとして覚えておく (M.columns が nil のとき)
+  -- ペインではなくタブ (= ウィンドウの端末サイズ) を見るので、分割中でも正しい値が取れる。
   if M.columns == nil then
-    wezterm.on('window-resized', function(gui, pane)
+    wezterm.on('window-resized', function(gui, _pane)
       local d = gui:get_dimensions()
       if d and d.is_full_screen then return end
-      local pd = pane and pane:get_dimensions()
-      if pd then remember_columns(pd.cols) end
+      local ok, size = pcall(function()
+        return gui:mux_window():active_tab():get_size()
+      end)
+      if ok and size then remember_size(size.cols, size.rows) end
     end)
   end
 end
