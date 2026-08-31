@@ -9,12 +9,18 @@
 # 設定を変更したら bin/chezmoi-sync-claude-settings.sh で再生成すること。
 #
 # 実行には bash と jq が必要（chezmoi.toml の [interpreters.sh] で bash を指定）。
-# Windows の jq は常に CRLF を出力するため tr で LF に正規化する。
+set -eu
 
 managed=$(cat <<'EOJSON'
 {{ includeTemplate "claude-jighead-settings.json" }}
 EOJSON
 )
 
-jq --argjson managed "$managed" \
+# 現在の内容は stdin で渡る。新規マシンなど未作成の場合は空になるため {} で補う
+# （空のまま jq に渡すと何も出力されず、ファイルが生成されない）
+current=$(cat)
+[ -n "$current" ] || current='{}'
+
+# Windows の jq は常に CRLF を出力するため tr で LF に正規化する
+printf '%s' "$current" | jq --argjson managed "$managed" \
   '$managed + (if has("autoMode") then {autoMode: .autoMode} else {} end)' | tr -d '\r'

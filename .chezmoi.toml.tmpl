@@ -1,0 +1,11 @@
+# chezmoi 本体の設定。chezmoi init 実行時に ~/.config/chezmoi/chezmoi.toml へ展開される。
+# 編集したら chezmoi init を実行して再生成すること。
+
+# modify_*.sh / run_*.sh を bash で実行する。
+#
+# この設定には副作用があり、source 名から .sh が取り除かれてターゲット名が決まる。
+# 例: modify_settings.json.sh.tmpl -> settings.json
+# 未設定だと settings.json.sh という誤ったターゲット名になるため、
+# Windows / macOS / Linux のいずれでも必要。
+[interpreters.sh]
+  command = "bash"
