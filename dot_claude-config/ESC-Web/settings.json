@@ -1,5 +1,8 @@
 {
   "model": "sonnet",
+  "env": {
+    "NODE_EXTRA_CA_CERTS": "C:/Users/masao/.claude/obsidian-local-rest-api.crt"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -8,6 +11,46 @@
           {
             "type": "command",
             "command": "rtk hook claude"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh waiting"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh done"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh clear"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/wezterm-notify.sh clear"
           }
         ]
       }
