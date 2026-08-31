@@ -1,0 +1,20 @@
+#!/bin/sh
+# settings.json のうち autoMode 以外を chezmoi 管理下に置くための modify_ スクリプト。
+#
+# autoMode は Claude Code が実行環境を解析して自動生成・更新する項目で、
+# 社内リポジトリ名やローカルパスを含み、マシンごとに内容が異なる。
+# そのため管理対象から外し、実ファイル側の値をそのまま引き継ぐ。
+#
+# 管理対象キーの実体は .chezmoitemplates/claude-jighead-settings.json。
+# 設定を変更したら bin/chezmoi-sync-claude-settings.sh で再生成すること。
+#
+# 実行には bash と jq が必要（chezmoi.toml の [interpreters.sh] で bash を指定）。
+# Windows の jq は常に CRLF を出力するため tr で LF に正規化する。
+
+managed=$(cat <<'EOJSON'
+{{ includeTemplate "claude-jighead-settings.json" }}
+EOJSON
+)
+
+jq --argjson managed "$managed" \
+  '$managed + (if has("autoMode") then {autoMode: .autoMode} else {} end)' | tr -d '\r'
