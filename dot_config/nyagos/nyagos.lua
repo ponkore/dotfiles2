@@ -29,6 +29,9 @@ return {
   -- %USERPROFILE%\.cargo\bin が存在すれば PATH 先頭に追加
   prepend_path_if_dir(nyagos.env.USERPROFILE .. "\\.cargo\\bin")
 
+  -- emacs (testing...)
+  prepend_path_if_dir("C:\\Apps\\emacs\\emacs-31.1\\bin")
+
   -- nyagos.histsize (default: 1000)
   nyagos.histsize = 100000
 
@@ -58,7 +61,7 @@ return {
   nyagos.alias.di="git diff"
   nyagos.alias.zoom="wezterm cli zoom-pane --toggle"
   nyagos.alias.lg="lazygit"
-  nyagos.alias.sql="sql -name ESC_Web2"  -- 実体は ~/bin/sql.cmd
+  nyagos.alias.sql="sql -name WebCoreDB_main"  -- 実体は ~/bin/sql.cmd
 
   -- wezterm ワークスペース切替 (ESC_Web / RINSETSU / config / ws) の alias は
   -- workspace.lua 側で登録している
