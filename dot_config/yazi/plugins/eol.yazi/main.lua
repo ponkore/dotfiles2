@@ -11,86 +11,86 @@ local SAMPLE = 4096 -- 判定に読み込む先頭バイト数
 
 -- url + mtime をキーにすることでファイル更新時に自動で再判定される
 local function key_of(file)
-	return string.format("%s\0%d", tostring(file.url), math.floor(file.cha.mtime or 0))
+  return string.format("%s\0%d", tostring(file.url), math.floor(file.cha.mtime or 0))
 end
 
 --- ファイル先頭を読んで改行コードを判定する（非同期コンテキスト専用）
 --- @return string|boolean "LF" / "CRLF" / "CR" / "MIXED"、判定不可なら false
 local function detect(url)
-	local f = io.open(tostring(url), "rb")
-	if not f then
-		return false
-	end
-	local chunk = f:read(SAMPLE)
-	f:close()
-	if not chunk or #chunk == 0 then
-		return false
-	end
-	if chunk:find("\0", 1, true) then
-		return false -- NUL を含む場合はバイナリとみなす
-	end
+  local f = io.open(tostring(url), "rb")
+  if not f then
+    return false
+  end
+  local chunk = f:read(SAMPLE)
+  f:close()
+  if not chunk or #chunk == 0 then
+    return false
+  end
+  if chunk:find("\0", 1, true) then
+    return false -- NUL を含む場合はバイナリとみなす
+  end
 
-	local _, crlf = chunk:gsub("\r\n", "")
-	local _, lf = chunk:gsub("\n", "")
-	local _, cr = chunk:gsub("\r", "")
-	local lone_lf = lf - crlf
-	local lone_cr = cr - crlf
+  local _, crlf = chunk:gsub("\r\n", "")
+  local _, lf = chunk:gsub("\n", "")
+  local _, cr = chunk:gsub("\r", "")
+  local lone_lf = lf - crlf
+  local lone_cr = cr - crlf
 
-	if (crlf > 0 and (lone_lf > 0 or lone_cr > 0)) or (lone_lf > 0 and lone_cr > 0) then
-		return "MIXED"
-	elseif crlf > 0 then
-		return "CRLF"
-	elseif lone_lf > 0 then
-		return "LF"
-	elseif lone_cr > 0 then
-		return "CR"
-	end
-	return false -- サンプル範囲内に改行が無い
+  if (crlf > 0 and (lone_lf > 0 or lone_cr > 0)) or (lone_lf > 0 and lone_cr > 0) then
+    return "MIXED"
+  elseif crlf > 0 then
+    return "CRLF"
+  elseif lone_lf > 0 then
+    return "LF"
+  elseif lone_cr > 0 then
+    return "CR"
+  end
+  return false -- サンプル範囲内に改行が無い
 end
 
 -- キャッシュは sync ピア側に置き、status セグメントから直接参照する
 local cache = {}
 
 local remember = ya.sync(function(_, key, value)
-	cache[key] = value
+  cache[key] = value
 end)
 
 local M = {}
 
 local function fetch(_, job)
-	for _, file in ipairs(job.files) do
-		remember(key_of(file), detect(file.url))
-	end
-	return true
+  for _, file in ipairs(job.files) do
+    remember(key_of(file), detect(file.url))
+  end
+  return true
 end
 
 --- フォルダ読み込み時に呼ばれる（非同期）
 --- yazi の fetcher throttle/retry 機構（ya.throttle）に対応するため、
 --- 存在する場合はコルーチン経由で retry シグナルを返す（git.yazi の fetch_compact に倣う）
 function M:fetch(job)
-	if ya.throttle then
-		fetch(self, job)
-		return ya.co(function()
-			for _, file in ipairs(job.files) do
-				coroutine.yield(file, { retry = true })
-			end
-		end)
-	else
-		return fetch(self, job)
-	end
+  if ya.throttle then
+    fetch(self, job)
+    return ya.co(function()
+      for _, file in ipairs(job.files) do
+        coroutine.yield(file, { retry = true })
+      end
+    end)
+  else
+    return fetch(self, job)
+  end
 end
 
 --- ステータスバー用のセグメントを返す（同期）
 function M:status()
-	local h = cx.active.current.hovered
-	if not h or h.cha.is_dir then
-		return ""
-	end
-	local eol = cache[key_of(h)]
-	if not eol then
-		return ""
-	end
-	return ui.Line { ui.Span(" " .. eol .. " "):fg(COLOR) }
+  local h = cx.active.current.hovered
+  if not h or h.cha.is_dir then
+    return ""
+  end
+  local eol = cache[key_of(h)]
+  if not eol then
+    return ""
+  end
+  return ui.Line { ui.Span(" " .. eol .. " "):fg(COLOR) }
 end
 
 return M
