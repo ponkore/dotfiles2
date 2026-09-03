@@ -60,3 +60,33 @@ desc = "Delete all bookmarks"
 on = [ "E" ]
 run = "plugin reveal-in-file-manager"
 desc = "Open the current directory in Explorer/Finder"
+
+[[mgr.prepend_keymap]]
+on = [ "X", "d" ]
+run = "plugin exceldiff pair"
+desc = "Diff two selected Excel files (upper one is the old side)"
+
+[[mgr.prepend_keymap]]
+on = [ "X", "D" ]
+run = "plugin exceldiff pair-rev"
+desc = "Diff two selected Excel files (reversed)"
+
+[[mgr.prepend_keymap]]
+on = [ "X", "v" ]
+run = "plugin exceldiff vcs"
+desc = "Diff an Excel file against the committed revision (git/svn)"
+
+[[mgr.prepend_keymap]]
+on = [ "X", "r" ]
+run = "plugin exceldiff vcs-rev"
+desc = "Diff an Excel file against a specific revision (git/svn)"
+
+[[mgr.prepend_keymap]]
+on = [ "X", "P", "d" ]
+run = "plugin exceldiff pair --pane"
+desc = "Diff two selected Excel files in a new WezTerm pane"
+
+[[mgr.prepend_keymap]]
+on = [ "X", "P", "v" ]
+run = "plugin exceldiff vcs --pane"
+desc = "Diff against the committed revision in a new WezTerm pane"
