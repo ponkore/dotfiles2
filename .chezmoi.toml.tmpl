@@ -7,5 +7,27 @@
 # 例: modify_settings.json.sh.tmpl -> settings.json
 # 未設定だと settings.json.sh という誤ったターゲット名になるため、
 # Windows / macOS / Linux のいずれでも必要。
+#
+# Windows では PATH 上の "bash" が WSL のランチャー
+# （C:\Windows\System32\bash.exe）に解決されることがある。WSL の bash は
+# chezmoi が渡す Windows パスのスクリプトを開けず exit 127 で失敗するため
+# （Git Bash から実行したときだけ偶然成功する）、Git for Windows の
+# bash.exe をフルパスで指定する。
 [interpreters.sh]
+{{- if eq .chezmoi.os "windows" }}
+{{-   $bash := "" }}
+{{-   range list "C:/Program Files/Git/bin/bash.exe"
+                 "C:/Program Files (x86)/Git/bin/bash.exe"
+                 (joinPath .chezmoi.homeDir "scoop/apps/git/current/bin/bash.exe") }}
+{{-     if and (eq $bash "") (stat .) }}{{ $bash = . }}{{ end }}
+{{-   end }}
+{{-   if $bash }}
+  command = {{ $bash | quote }}
+{{-   else }}
+  # Git for Windows が見つからなかったため PATH に任せる（WSL の bash を
+  # 掴むと modify_ スクリプトが失敗する）。
   command = "bash"
+{{-   end }}
+{{- else }}
+  command = "bash"
+{{- end }}
