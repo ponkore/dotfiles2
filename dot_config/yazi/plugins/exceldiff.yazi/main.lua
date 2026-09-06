@@ -14,8 +14,63 @@
 
 local EXTS = { xlsx = true, xlsm = true }
 
+local WINDOWS = ya.target_family() == "windows"
+
 local function bin()
-  return os.getenv("EXCELDIFF_BIN") or "exceldiff"
+  local b = os.getenv("EXCELDIFF_BIN")
+  if b and b ~= "" then
+    return b
+  end
+  return "exceldiff"
+end
+
+local function is_file(path)
+  local cha = fs.cha(Url((path:gsub("\\", "/"))))
+  return cha ~= nil and not cha.is_dir
+end
+
+-- Windows で拡張子を省略した名前に対し、PATHEXT の候補を順に試す。
+local function candidates(path)
+  if not WINDOWS then
+    return { path }
+  end
+  local list = { path }
+  for ext in (os.getenv("PATHEXT") or ".COM;.EXE;.BAT;.CMD"):gmatch("[^;]+") do
+    list[#list + 1] = path .. ext
+  end
+  return list
+end
+
+-- PATH を検索して実行ファイルの実体を返す（見つからなければ nil）。
+--
+-- バックグラウンド起動（orphan）は失敗しても一切表示されないため、PATH 上に
+-- exceldiff が無いと「キーを押しても無反応」にしか見えない。ここで先に解決し、
+-- 見つからなければ通知する。解決済みの絶対パスで起動するので、子プロセス側の
+-- PATH にも依存しない。
+local function resolve_bin()
+  local name = bin()
+  if name:find("[/\\]") then
+    for _, c in ipairs(candidates(name)) do
+      if is_file(c) then
+        return c
+      end
+    end
+    return nil
+  end
+
+  local sep, slash = WINDOWS and ";" or ":", WINDOWS and "\\" or "/"
+  -- Lua 5.4 では for の制御変数が読み取り専用なので、別の変数へ受け直す。
+  for entry in (os.getenv("PATH") or ""):gmatch("[^" .. sep .. "]+") do
+    local dir = entry:gsub("[/\\]+$", "")
+    if dir ~= "" then
+      for _, c in ipairs(candidates(dir .. slash .. name)) do
+        if is_file(c) then
+          return c
+        end
+      end
+    end
+  end
+  return nil
 end
 
 local function notify(message, level)
@@ -116,8 +171,8 @@ local function build_args(mode, urls)
 end
 
 -- 方式 A: バックグラウンド起動（既定）。
-local function run_detached(args)
-  local parts = { ya.quote(bin()) }
+local function run_detached(exe, args)
+  local parts = { ya.quote(exe) }
   for _, a in ipairs(args) do
     parts[#parts + 1] = ya.quote(a)
   end
@@ -125,7 +180,7 @@ local function run_detached(args)
 end
 
 -- 方式 B: WezTerm のペインで実行し、ログを表示する。失敗時はキー入力まで残す。
-local function run_in_pane(args)
+local function run_in_pane(exe, args)
   if not os.getenv("WEZTERM_PANE") then
     notify("WEZTERM_PANE が設定されていません（--pane は WezTerm 上でのみ使えます）")
     return
@@ -136,7 +191,7 @@ local function run_in_pane(args)
     return
   end
 
-  local parts = { "&", ps_quote(bin()) }
+  local parts = { "&", ps_quote(exe) }
   for _, a in ipairs(args) do
     parts[#parts + 1] = ps_quote(a)
   end
@@ -170,6 +225,15 @@ return {
       end
     end
 
+    local exe = resolve_bin()
+    if not exe then
+      return notify(string.format(
+        "実行ファイル `%s` が見つかりません。\n"
+          .. "PATH を確認するか、環境変数 EXCELDIFF_BIN でフルパスを指定してください。",
+        bin()
+      ))
+    end
+
     local args, err = build_args(mode, urls)
     if not args then
       if err then
@@ -179,9 +243,9 @@ return {
     end
 
     if pane then
-      run_in_pane(args)
+      run_in_pane(exe, args)
     else
-      run_detached(args)
+      run_detached(exe, args)
     end
   end,
 }

@@ -57,6 +57,11 @@ ya.emit("cd", { dir })
 
 外部プロセスの起動に `Command(...):spawn()` を使ってはいけません。返り値の `Child` を破棄した時点で子プロセスが kill されるため、`explorer` のように「起動してすぐ終了し、実処理を別プロセスへ引き渡す」コマンドは何も起きずに終わります。待ち受けが不要な場合でも `:status()`（または `:output()`）を使ってください。どちらも即座に返ります。
 
+### 落とし穴
+
+- **プラグインの構文エラーは無言で握り潰されます。** キーを押しても何の通知も出ず、`yazi.log`（`YAZI_LOG=debug`）にも残りません。エラー内容を見るには、別のプラグインから `pcall(require, "<プラグイン名>")` を呼んでその戻り値を `ya.notify` してください。
+- **yazi の Lua は 5.4 です。** generic `for` の制御変数は読み取り専用なので、`for dir in ... do dir = dir:gsub(...) end` は `attempt to assign to const variable` になります。別のローカル変数へ受け直してください。LuaJIT / Lua 5.1 では通ってしまうため、手元の Lua で構文チェックする場合はバージョンに注意。
+
 ## ブックマークのキーバインド
 
 `keymap.toml` で `b` プレフィックスを使って定義しています（プラグイン README のデフォルト `m`/`'` キーを上書き）：
@@ -86,6 +91,8 @@ ya.emit("cd", { dir })
 - 起動は `ya.emit("shell", { cmd, orphan = true })`。`exceldiff` は Excel を閉じるまで待つため、`block = true` にすると yazi が固まります。
 - `--pane` 付きのキーは `wezterm cli split-pane` でペインを分割し、`pwsh -Command` 経由で実行します（終了コードが 0 以外のときだけ `Read-Host` でペインを残す）。`WEZTERM_PANE` が未設定なら通知してエラー終了します。
 - 実行ファイルは環境変数 `EXCELDIFF_BIN` で上書きできます。既定は PATH 上の `exceldiff`（現在は `~/bin/exceldiff.exe`）。
+- 起動前に `resolve_bin()` が PATH（Windows では `PATHEXT` も）を自前で走査して実行ファイルを解決し、**解決済みの絶対パス**で起動します。見つからない場合は通知します。orphan 起動は失敗しても一切表示されないため、この事前チェックが無いと「キーを押しても無反応」になります。
+- **yazi は nyagos の rcfile より前に起動します。** `~/.config/nyagos/workspace.lua` が `nyagos --cmd-first yazi` で起動しており、`--cmd-first` は rcfile（`nyagos.lua`）より前にコマンドを実行するため、`nyagos.lua` の `prepend_path_if_dir(%USERPROFILE%\bin)` は yazi には効きません。`C:\Users\masao\bin` はユーザー環境変数 PATH（`HKCU:\Environment`）に登録済みです。
 
 ## フレーバーの切り替え
 
