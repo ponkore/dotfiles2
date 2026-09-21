@@ -4,7 +4,12 @@
     "NODE_EXTRA_CA_CERTS": "C:/Users/masao/.claude/obsidian-local-rest-api.crt"
   },
 {{- end }}
-  "model": "opus",
+  "permissions": {
+    "allow": [
+      "Bash(emacs-query:*)"
+    ]
+  },
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -59,6 +64,7 @@
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "theme": "dark",
+  "agentPushNotifEnabled": true,
   "autoMode": {
     "environment": [
       "### Org-wide",
@@ -95,6 +101,5 @@
         "--browserUrl=http://127.0.0.1:9222"
       ]
     }
-  },
-  "agentPushNotifEnabled": true
+  }
 }
