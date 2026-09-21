@@ -15,6 +15,13 @@ managed=$(cat <<'EOJSON'
 {{ includeTemplate "claude-jighead-settings.json" }}
 EOJSON
 )
+{{- if ne .chezmoi.os "windows" }}
+
+# NODE_EXTRA_CA_CERTS は Windows のパスなので、それ以外では入れない
+# （存在しないと Node が起動のたびに Warning を出す）
+managed=$(printf '%s' "$managed" | jq -c \
+  'del(.env.NODE_EXTRA_CA_CERTS) | if .env == {} then del(.env) else . end')
+{{- end }}
 
 # 現在の内容は stdin で渡る。新規マシンなど未作成の場合は空になるため {} で補う
 # （空のまま jq に渡すと何も出力されず、ファイルが生成されない）

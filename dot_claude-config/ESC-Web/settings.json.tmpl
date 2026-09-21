@@ -1,8 +1,10 @@
 {
   "model": "sonnet",
+{{- if eq .chezmoi.os "windows" }}
   "env": {
     "NODE_EXTRA_CA_CERTS": "C:/Users/masao/.claude/obsidian-local-rest-api.crt"
   },
+{{- end }}
   "hooks": {
     "PreToolUse": [
       {
