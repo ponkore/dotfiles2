@@ -302,6 +302,52 @@ function ya() {
 }
 
 #
+# claude: 引数なしで起動した場合、どの CLAUDE_CONFIG_DIR で起動するかを
+# fzf メニューで選択させる（矢印キー+Enter、または数字キーで即決定）
+#
+function claude() {
+    local claude_path
+    claude_path="$(whence -p claude)" || claude_path=claude
+
+    # --version / update の場合のみ fzf メニューを出さずそのまま実行する
+    if [[ $# -eq 1 && ( $1 == "--version" || $1 == "update" ) ]] || ! command -v fzf 1>/dev/null 2>&1; then
+        "$claude_path" "$@"
+        return
+    fi
+
+    local -a menu_labels
+    menu_labels=(
+        "1) 通常起動(Claude Pro)"
+        "2) jighead(Claude Max)"
+        "3) ESC-Web(Claude Enterprise)"
+    )
+    local -A menu_config_dirs
+    menu_config_dirs=(
+        "1) 通常起動(Claude Pro)"          ""
+        "2) jighead(Claude Max)"           "$HOME/.claude-config/jighead"
+        "3) ESC-Web(Claude Enterprise)"    "$HOME/.claude-config/ESC-Web"
+    )
+
+    local selection
+    selection="$(print -l -- "${menu_labels[@]}" | fzf \
+        --prompt="claude> " --height=~40% --border \
+        --header="[Up/Down + Enter] or [1-3] で選択" \
+        --bind="1:pos(1)+accept,2:pos(2)+accept,3:pos(3)+accept")"
+
+    if [[ -z $selection ]] || (( ! ${+menu_config_dirs[$selection]} )); then
+        print "claude: キャンセルしました"
+        return 1
+    fi
+
+    local config_dir=${menu_config_dirs[$selection]}
+    if [[ -n $config_dir ]]; then
+        CLAUDE_CONFIG_DIR="$config_dir" "$claude_path" "$@"
+    else
+        env -u CLAUDE_CONFIG_DIR "$claude_path" "$@"
+    fi
+}
+
+#
 # LM Studio CLI (lms)
 #
 export PATH="$PATH:/Users/masao/.lmstudio/bin"
