@@ -1,5 +1,5 @@
 {
-  "model": "sonnet",
+  "model": "claude-opus-5[1m]",
 {{- if eq .chezmoi.os "windows" }}
   "env": {
     "NODE_EXTRA_CA_CERTS": "C:/Users/masao/.claude/obsidian-local-rest-api.crt"
@@ -63,6 +63,11 @@
     "command": "bash ~/.claude-config/ESC-Web/statusline-command.sh"
   },
   "language": "Japanese",
+  "effortLevel": "medium",
   "theme": "dark",
-  "effortLevel": "medium"
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "high"
+    }
+  }
 }

@@ -2,7 +2,7 @@
   "env": {
     "NODE_EXTRA_CA_CERTS": "C:/Users/masao/.claude-config/jighead/obsidian-local-rest-api.crt"
   },
-  "model": "opus[1m]",
+  "model": "claude-opus-5[1m]",
   "hooks": {
     "Notification": [
       {
