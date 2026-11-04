@@ -52,4 +52,9 @@ dialog.apply(config)
 --
 config.use_ime = true
 
+-- SSH_AUTH_SOCK を WezTerm に書き換えさせない。
+-- 既定 (true) だと存在しない agent.<pid> を指す SSH_AUTH_SOCK が注入され、
+-- Bitwarden の名前付きパイプ (\\.\pipe\openssh-ssh-agent) に繋がらなくなる。
+config.mux_enable_ssh_agent = false
+
 return config
