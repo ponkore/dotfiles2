@@ -8,7 +8,7 @@ return {
   --
   -- 環境変数
   --
-  nyagos.env.YAZI_FILE_ONE=nyagos.env.USERPROFILE .. "\\scoop\\apps\\git\\current\\usr\\bin\\file.exe"
+  nyagos.env.YAZI_FILE_ONE="C:\\Program Files\\Git\\usr\\bin\\file.exe"
   nyagos.env.HOME=nyagos.env.USERPROFILE
 
   -- 指定したパスがディレクトリであれば PATH 先頭に追加する

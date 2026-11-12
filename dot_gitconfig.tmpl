@@ -2,6 +2,9 @@
 	excludesfile = %(prefix)/Users/masao/.gitignore_global
 	autocrlf = false
 	editor = vim
+{{- if eq .chezmoi.os "windows" }}
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+{{- end }}
 [difftool "sourcetree"]
 {{- if eq .chezmoi.os "darwin" }}
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
@@ -45,7 +48,7 @@
 [init]
 	defaultBranch = main
 [credential "helperselector"]
-	selected = manager-core
+	selected = manager
 [credential "https://no-sinker.backlog.com"]
 	provider = generic
 # [core]
