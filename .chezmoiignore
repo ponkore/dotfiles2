@@ -29,3 +29,6 @@ bin/sql.cmd
 
 # .claude.json は Claude Code が実行時に書き換える動的な状態ファイルのため管理対象外
 .claude-config/jighead/.claude.json
+
+# .claude/settings.json は Claude Code がキーの並びを書き換えるため管理対象外
+.claude/settings.json
