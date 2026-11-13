@@ -369,3 +369,17 @@ for _bw_sock in \
     fi
 done
 unset _bw_sock
+
+#
+# EmbTerm (Emacs の中の端末) のシェル統合
+#
+# EmbTerm の端末の中だけ。cd の追従 (OSC 7)、プロンプトの境界 (OSC 133。
+# Emacs 側の C-c C-p / C-c C-n / C-c C-o と終了コードの表示)、
+# embterm_find_file / embterm_dired で Emacs の別のウィンドウに開く。
+# PS1 を包むので starship の後に置く。配布物は M-x my:embterm-update が写す。
+#
+# && で書くと、EmbTerm 以外では .zshrc の最後のコマンドが「偽」で終わり、
+# 起動直後の $? が 1 になる (実測)。if なら 0 で終わる
+if [[ $TERM_PROGRAM == EmbTerm ]]; then
+    source ~/.emacs.d/embterm/etc/embterm.zsh
+fi
